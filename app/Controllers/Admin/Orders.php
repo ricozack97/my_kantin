@@ -45,16 +45,15 @@ class Orders extends BaseController
         $id         = (int) $id;
         $orderModel = model(OrderModel::class);
         $itemModel  = model(OrderItemModel::class);
-        $userModel  = model(UserModel::class);
 
         $order = $orderModel
             ->select(
                 'orders.*,
-             users.name AS customer_name,
-             users.no_hp AS no_hp,
-             ua.building AS address_building,
-             ua.room     AS address_room,
-             ua.note     AS address_note'
+                 users.name AS customer_name,
+                 users.no_hp AS no_hp,
+                 ua.building AS address_building,
+                 ua.room     AS address_room,
+                 ua.note     AS address_note'
             )
             ->join('users', 'users.id = orders.user_id', 'left')
             ->join('user_addresses ua', 'ua.id = orders.delivery_address_id', 'left')
@@ -62,13 +61,10 @@ class Orders extends BaseController
             ->first();
 
         if (!$order) {
-            return redirect()->to('/admin/orders')
-                ->with('error', 'Pesanan tidak ditemukan.');
+            return redirect()->to('/admin/orders')->with('error', 'Pesanan tidak ditemukan.');
         }
 
-        $items = $itemModel
-            ->where('order_id', $id)
-            ->findAll();
+        $items = $itemModel->where('order_id', $id)->findAll();
 
         return view('admin/orders/show', [
             'order' => $order,
@@ -98,6 +94,7 @@ class Orders extends BaseController
 
         return redirect()->back()->with('success', 'Status pesanan diperbarui.');
     }
+
     public function markPaid($id)
     {
         $id = (int) $id;
@@ -106,29 +103,25 @@ class Orders extends BaseController
         $order      = $orderModel->find($id);
 
         if (! $order) {
-            return redirect()->to('/admin/orders')
-                ->with('error', 'Pesanan tidak ditemukan.');
+            return redirect()->to('/admin/orders')->with('error', 'Pesanan tidak ditemukan.');
         }
 
         if ($order['status'] === 'canceled') {
-            return redirect()->back()
-                ->with('error', 'Pesanan yang dibatalkan tidak bisa ditandai sudah dibayar.');
+            return redirect()->back()->with('error', 'Pesanan yang dibatalkan tidak bisa ditandai sudah dibayar.');
         }
 
         $orderModel->update($id, [
             'payment_status' => 'paid',
-            // kalau di tabel ada kolom ini, boleh diisi juga:
-            // 'payment_method' => 'cash',
-            // 'paid_at'        => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->back()
-            ->with('success', 'Pembayaran ditandai sudah dibayar (tunai).');
+        return redirect()->back()->with('success', 'Pembayaran ditandai sudah dibayar (tunai).');
     }
+
+
     public function nota($id)
     {
         $id = (int)$id;
-        $orderModel = model(\App\Models\OrderModel::class);
+        $orderModel = model(OrderModel::class);
 
         $order = $orderModel
             ->select('orders.*, users.name AS customer_name')
@@ -140,9 +133,7 @@ class Orders extends BaseController
             return redirect()->to('/admin/orders')->with('error', 'Pesanan tidak ditemukan.');
         }
 
-        $items = model(\App\Models\OrderItemModel::class)->where('order_id', $id)->findAll();
-
-        $order['items'] = $items;
+        $items = model(OrderItemModel::class)->where('order_id', $id)->findAll();
 
         return view('orders/nota', [
             'order' => $order,
@@ -150,10 +141,11 @@ class Orders extends BaseController
         ]);
     }
 
+
     public function notaPdf($id)
     {
         $id = (int)$id;
-        $orderModel = model(\App\Models\OrderModel::class);
+        $orderModel = model(OrderModel::class);
 
         $order = $orderModel
             ->select('orders.*, users.name AS customer_name')
@@ -165,7 +157,7 @@ class Orders extends BaseController
             return redirect()->to('/admin/orders')->with('error', 'Pesanan tidak ditemukan.');
         }
 
-        $items = model(\App\Models\OrderItemModel::class)->where('order_id', $id)->findAll();
+        $items = model(OrderItemModel::class)->where('order_id', $id)->findAll();
         $order['items'] = $items;
 
         $html = view('orders/nota_pdf', ['order' => $order, 'user' => ['name' => $order['customer_name']]]);
@@ -181,4 +173,60 @@ class Orders extends BaseController
             ->setHeader('Content-Disposition', "inline; filename=nota_{$order['code']}.pdf")
             ->setBody($output);
     }
-}
+
+
+    // ===============================
+    // ADMIN MENERIMA PEMBAYARAN QRIS
+    // ===============================
+    public function verify($id)
+    {
+        $id = (int)$id;
+
+        $orderModel = model(OrderModel::class);
+        $order = $orderModel->find($id);
+
+        if (!$order) {
+            return redirect()->to('/admin/orders')->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        if ($order['payment_status'] !== 'waiting_confirmation') {
+            return redirect()->back()->with('error', 'Tidak ada pembayaran yang menunggu verifikasi.');
+        }
+
+        $orderModel->update($id, [
+            'payment_status' => 'paid',
+            'status'         => 'processing',
+        ]);
+
+        return redirect()->back()->with('success', 'Pembayaran berhasil diverifikasi.');
+    }
+
+    // ==================================
+    // ADMIN MENOLAK PEMBAYARAN QRIS
+    // ==================================
+    public function reject($id)
+    {
+        $id = (int)$id;
+
+        $orderModel = model(OrderModel::class);
+        $order = $orderModel->find($id);
+
+        if (!$order) {
+            return redirect()->to('/admin/orders')->with('error', 'Pesanan tidak ditemukan.');
+        }
+
+        if (!empty($order['payment_proof'])) {
+            $path = ROOTPATH . 'public/uploads/qris/bukti/' . $order['payment_proof'];
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
+
+        $orderModel->update($id, [
+            'payment_status' => 'failed',
+            'payment_proof'  => null,
+        ]);
+
+        return redirect()->back()->with('success', 'Pembayaran ditolak.');
+    }
+} // ⬅️ INI adalah kurung penutup yang BENAR

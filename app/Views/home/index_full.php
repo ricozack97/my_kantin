@@ -579,6 +579,7 @@
     </div>
 
     <script>
+      /*
       setTimeout(() => {
         const toast = document.getElementById('welcomeToast');
         if (toast) {
@@ -586,6 +587,7 @@
           setTimeout(() => toast.remove(), 500);
         }
       }, 3600);
+      */
     </script>
   <?php endif; ?>
 

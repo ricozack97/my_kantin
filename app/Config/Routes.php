@@ -97,3 +97,10 @@ $routes->group('admin', ['filter' => 'role:admin'], function ($routes) {
     $routes->get('verify-wa', 'Admin\VerifyWa::index');
     $routes->post('verify-wa/(:num)', 'Admin\VerifyWa::verify/$1');
 });
+// payment
+$routes->group('p', ['namespace' => 'App\Controllers\Buyer'], function($routes) {
+    $routes->get('payment/(:num)', 'Payment::pay/$1');
+    $routes->post('payment/upload-proof/(:num)', 'Payment::uploadProof/$1');
+});
+$routes->post('admin/orders/(:num)/verify', 'Admin\Orders::verify/$1');
+$routes->post('admin/orders/(:num)/reject', 'Admin\Orders::reject/$1');

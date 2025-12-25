@@ -21,6 +21,7 @@ class OrderModel extends Model
         'payment_status',
         'payment_method',
         'payment_type',
+        'payment_proof',
         'created_at',
         'updated_at',
     ];

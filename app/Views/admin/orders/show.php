@@ -4,37 +4,23 @@ include APPPATH . 'Views/admin/partials/head.php';
 ?>
 
 <style>
-    .badge.wait {
-        background-color: #f6c23e;
-        color: #fff;
-    }
-
-    .badge.proc {
-        background-color: #4e73df;
-        color: #fff;
-    }
-
-    .badge.done {
-        background-color: #1cc88a;
-        color: #fff;
-    }
-
-    .badge.cancel {
-        background-color: #e74a3b;
-        color: #fff;
-    }
+    .badge.wait { background-color: #f6c23e; color: #fff; }
+    .badge.proc { background-color: #4e73df; color: #fff; }
+    .badge.done { background-color: #1cc88a; color: #fff; }
+    .badge.cancel { background-color: #e74a3b; color: #fff; }
 </style>
 
 <h1 class="h3 mb-4 text-gray-800">Detail Pesanan</h1>
 
 <?php if (session('success')): ?>
-    <div class="alert alert-success" role="alert"><?= esc(session('success')); ?></div>
+    <div class="alert alert-success"><?= esc(session('success')) ?></div>
 <?php endif; ?>
 <?php if (session('error')): ?>
-    <div class="alert alert-danger" role="alert"><?= esc(session('error')); ?></div>
+    <div class="alert alert-danger"><?= esc(session('error')) ?></div>
 <?php endif; ?>
 
 <?php
+// ===== STATUS ORDER =====
 $status = $order['status'] ?? 'pending';
 
 $labelMap = [
@@ -54,171 +40,184 @@ $badgeMap = [
 $label      = $labelMap[$status] ?? ucfirst($status);
 $badgeClass = $badgeMap[$status] ?? 'badge';
 
+// ===== STATUS PEMBAYARAN =====
 $paymentStatus = $order['payment_status'] ?? 'unpaid';
 
 $payLabelMap = [
     'unpaid' => 'Belum Dibayar',
     'paid'   => 'Sudah Dibayar',
-    'failed' => 'Gagal / Kadaluarsa',
+    'failed' => 'Gagal / Ditolak',
+    'waiting_confirmation' => 'Menunggu Konfirmasi',
 ];
 
 $payBadgeMap = [
     'unpaid' => 'badge wait',
     'paid'   => 'badge done',
     'failed' => 'badge cancel',
+    'waiting_confirmation' => 'badge wait',
 ];
 
 $paymentLabel      = $payLabelMap[$paymentStatus] ?? ucfirst($paymentStatus);
 $paymentBadgeClass = $payBadgeMap[$paymentStatus] ?? 'badge';
-?>
-<?php
-$waLink = null;
 
+// ===== LINK WHATSAPP =====
+$waLink = null;
 if (!empty($order['no_hp'])) {
     $waPhone = preg_replace('/^0/', '62', $order['no_hp']);
-
-    $message = 
-    "Halo {$order['customer_name']},\n" .
-    "Pesanan Anda dengan kode {$order['code']} sudah *SELESAI*\n" .
-    "Silakan diambil / ditunggu ya.\n" .
-    "Terima kasih";
-
-$waMessage = urlencode($message);
-
-$waLink = "https://wa.me/{$waPhone}?text={$waMessage}";
+    $message =
+        "Halo {$order['customer_name']},\n" .
+        "Pesanan Anda dengan kode {$order['code']} sudah *SELESAI*.\n" .
+        "Terima kasih 🙏";
+    $waLink = "https://wa.me/{$waPhone}?text=" . urlencode($message);
 }
 ?>
 
 <div class="row">
+
+    <!-- ================= LEFT ================= -->
     <div class="col-lg-6">
 
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">
-                    Detail Pesanan #<?= esc($order['code']); ?>
-                </h6>
+            <div class="card-header">
+                <strong>Detail Pesanan #<?= esc($order['code']) ?></strong>
             </div>
+
             <div class="card-body">
 
-                <?php
-                $deliveryLabel = '-';
-                $dm = $order['delivery_method'] ?? null;
+                <p><strong>Tanggal:</strong> <?= esc(date('d M Y H:i', strtotime($order['created_at']))) ?></p>
+                <p><strong>Pemesan:</strong> <?= esc($order['customer_name']) ?></p>
+                <p><strong>Total:</strong> Rp <?= number_format($order['total_amount'], 0, ',', '.') ?></p>
 
-                if ($dm === 'pickup') {
-                    $deliveryLabel = 'Ambil Sendiri';
-                } elseif ($dm === 'delivery') {
-                    $deliveryLabel = 'Diantar';
-                }
-                $locBuilding = $order['address_building'] ?? ($order['building'] ?? '-');
-                $locRoom     = $order['address_room'] ?? ($order['room'] ?? '');
-                $locNote     = $order['address_note'] ?? '';
-                ?>
+                <p>
+                    <strong>Status Pesanan:</strong>
+                    <span class="<?= $badgeClass ?>"><?= $label ?></span>
+                </p>
 
-                <p class="mb-1">
-                    <strong>Tanggal:</strong>
-                    <?= esc(date('d M Y H:i', strtotime($order['created_at']))); ?>
-                </p>
-                <p class="mb-1">
-                    <strong>Pemesan:</strong> <?= esc($order['customer_name'] ?? '-'); ?>
-                </p>
-                <p class="mb-1">
-                    <strong>Total:</strong>
-                    Rp <?= number_format((int)$order['total_amount'], 0, ',', '.'); ?>
-                </p>
-                <p class="mb-1">
-                    <strong>Metode:</strong> <?= esc($deliveryLabel); ?>
-                </p>
-                <p class="mb-1">
-                    <strong>Lokasi:</strong> <?= esc(trim($locBuilding . ' ' . $locRoom)); ?>
-                </p>
-                <?php if (!empty($locNote)): ?>
-                    <p class="mb-1">
-                        <strong>Catatan:</strong> <?= esc($locNote); ?>
-                    </p>
-                <?php endif; ?>
-
-                <p class="mb-1">
-                    <strong>Status:</strong>
-                    <span class="<?= $badgeClass; ?>"><?= $label; ?></span>
-                </p>
-                <p class="mb-3">
+                <p>
                     <strong>Status Pembayaran:</strong>
-                    <span class="<?= $paymentBadgeClass; ?>"><?= $paymentLabel; ?></span>
+                    <span class="<?= $paymentBadgeClass ?>"><?= $paymentLabel ?></span>
                 </p>
-                <?php if ($paymentStatus !== 'paid'): ?>
-                    <form action="<?= base_url('admin/orders/' . $order['id'] . '/paid'); ?>"
-                        method="post"
-                        class="mt-2">
-                        <?= csrf_field(); ?>
-                        <button type="submit" class="btn btn-success btn-sm">
+<!-- ====== BUKTI QRIS + POPUP ====== -->
+<?php if (!empty($order['payment_proof'])): ?>
+    <div class="mt-3 p-3 border rounded" style="background:#fff8e1;">
+        <strong class="text-warning d-block mb-2">Bukti Pembayaran QRIS</strong>
+
+        <!-- Thumbnail -->
+        <img 
+            src="<?= base_url('uploads/qris/bukti/' . $order['payment_proof']) ?>" 
+            class="img-fluid rounded"
+            style="max-width:180px; cursor:pointer; border:1px solid #ccc"
+            onclick="$('#modalQris').modal('show')"
+        >
+
+        <!-- Tombol TEKS LIHAT – WARNA HIJAU -->
+<div class="mt-2">
+    <button class="btn btn-success btn-sm" onclick="$('#modalQris').modal('show')">
+        Lihat Bukti
+    </button>
+</div>
+
+    </div>
+<?php endif; ?>
+<!-- Modal Popup -->
+ <?php if (!empty($order['payment_proof'])): ?>
+<div class="modal fade" id="modalQris" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Bukti Pembayaran QRIS</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body text-center">
+
+        <!-- FULL IMAGE -->
+        <img 
+            src="<?= base_url('uploads/qris/bukti/' . $order['payment_proof']) ?>" 
+            class="img-fluid rounded mb-3"
+            style="max-height:75vh; cursor:zoom-in"
+            onclick="window.open(this.src, '_blank')"
+        >
+
+        <!-- VERIFIKASI -->
+        <?php if ($order['payment_status'] === 'waiting_confirmation'): ?>
+            <form action="<?= base_url('admin/orders/' . $order['id'] . '/verify') ?>" 
+                  method="post" class="d-inline">
+                <?= csrf_field() ?>
+                <button class="btn btn-success">✔ Terima Pembayaran</button>
+            </form>
+
+            <form action="<?= base_url('admin/orders/' . $order['id'] . '/reject') ?>" 
+                  method="post" class="d-inline">
+                <?= csrf_field() ?>
+                <button class="btn btn-danger">✖ Tolak Pembayaran</button>
+            </form>
+        <?php endif; ?>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+
+
+<!-- ====== TOMBOL BAYAR TUNAI ====== -->
+<?php if ($order['payment_status'] !== 'paid'): ?>
+    <form method="post" action="<?= base_url('admin/orders/' . $order['id'] . '/paid') ?>" class="mt-3">
+        <?= csrf_field() ?>
+        <button class="btn btn-success btn-sm">💵 Tandai Sudah Dibayar (Tunai)</button>
+    </form>
+<?php endif; ?>
+                <!-- ===== ADMIN TOMBOL UBAH STATUS & TANDAI SUDAH DIBAYAR ===== -->
+                <?php if ($paymentStatus !== 'paid' && $paymentStatus !== 'waiting_confirmation'): ?>
+                    <form method="post" action="<?= base_url('admin/orders/' . $order['id'] . '/paid') ?>">
+                        <?= csrf_field() ?>
+                        <button class="btn btn-success btn-sm">
                             Tandai Sudah Dibayar (Tunai)
                         </button>
                     </form>
                 <?php endif; ?>
 
-                <form action="<?= base_url('admin/orders/' . $order['id'] . '/status'); ?>" method="post" class="mt-3">
-                    <?= csrf_field(); ?>
-
-                    <div class="btn-group" role="group" aria-label="Ubah Status">
-                        <button type="submit" name="status" value="pending" class="btn btn-light border">
-                            Menunggu
-                        </button>
-                        <button type="submit" name="status" value="processing" class="btn btn-info text-white">
-                            Diproses
-                        </button>
-                        <button type="submit" name="status" value="completed" class="btn btn-success">
-                            Selesai
-                        </button>
-                        <button type="submit" name="status" value="canceled" class="btn btn-danger">
-                            Batal
-                        </button>
+                <form method="post" action="<?= base_url('admin/orders/' . $order['id'] . '/status') ?>" class="mt-3">
+                    <?= csrf_field() ?>
+                    <div class="btn-group">
+                        <button name="status" value="pending" class="btn btn-light border">Menunggu</button>
+                        <button name="status" value="processing" class="btn btn-info text-white">Diproses</button>
+                        <button name="status" value="completed" class="btn btn-success">Selesai</button>
+                        <button name="status" value="canceled" class="btn btn-danger">Batal</button>
                     </div>
                 </form>
+
                 <?php if ($status === 'completed' && $waLink): ?>
-                    <div class="mt-3">
-                        <a href="<?= $waLink ?>"
-                            target="_blank"
-                            class="btn btn-success">
-                            📲 Kirim WhatsApp ke Pembeli
-                        </a>
-                    </div>
+                    <a href="<?= $waLink ?>" target="_blank" class="btn btn-success mt-3">
+                        📲 Kirim WhatsApp
+                    </a>
                 <?php endif; ?>
 
             </div>
         </div>
-
     </div>
 
+    <!-- ================= RIGHT ================= -->
     <div class="col-lg-6">
         <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Item Pesanan</h6>
+            <div class="card-header">
+                <strong>Item Pesanan</strong>
             </div>
             <div class="card-body">
 
-                <?php
-                $groupedItems = [];
-
-                foreach ($items as $it) {
-                    $key = $it['name'];
-
-                    if (!isset($groupedItems[$key])) {
-                        $groupedItems[$key] = [
-                            'name'     => $it['name'],
-                            'qty'      => (int) $it['qty'],
-                            'price'    => (int) $it['price'],
-                            'subtotal' => (int) $it['subtotal'],
-                        ];
-                    } else {
-                        $groupedItems[$key]['qty']      += (int) $it['qty'];
-                        $groupedItems[$key]['subtotal'] += (int) $it['subtotal'];
-                    }
-                }
-                ?>
-
                 <div class="table-responsive">
-                    <table class="table table-bordered mb-0">
-                        <thead class="thead-light">
+                    <table class="table table-bordered">
+                        <thead>
                             <tr>
                                 <th>Menu</th>
                                 <th>Qty</th>
@@ -227,39 +226,33 @@ $waLink = "https://wa.me/{$waPhone}?text={$waMessage}";
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $grandTotal = 0; ?>
-                            <?php foreach ($groupedItems as $it): ?>
+                            <?php $total = 0; ?>
+                            <?php foreach ($items as $it): ?>
                                 <tr>
-                                    <td><?= esc($it['name']); ?></td>
-                                    <td><?= $it['qty']; ?></td>
-                                    <td>Rp <?= number_format((int)$it['price'], 0, ',', '.'); ?></td>
-                                    <td>Rp <?= number_format((int)$it['subtotal'], 0, ',', '.'); ?></td>
+                                    <td><?= esc($it['name']) ?></td>
+                                    <td><?= $it['qty'] ?></td>
+                                    <td>Rp <?= number_format($it['price'], 0, ',', '.') ?></td>
+                                    <td>Rp <?= number_format($it['subtotal'], 0, ',', '.') ?></td>
                                 </tr>
-                                <?php $grandTotal += (int)$it['subtotal']; ?>
+                                <?php $total += $it['subtotal']; ?>
                             <?php endforeach; ?>
-
                             <tr>
-                                <td colspan="3" style="font-weight:bold;">Total</td>
-                                <td style="font-weight:bold;">Rp <?= number_format($grandTotal, 0, ',', '.'); ?></td>
+                                <th colspan="3">Total</th>
+                                <th>Rp <?= number_format($total, 0, ',', '.') ?></th>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <div class="mt-3">
-                    <a href="<?= base_url('admin/orders'); ?>" class="btn btn-light border">
-                        Kembali
-                    </a>
-                    <a class="btn btn-primary" target="_blank" href="<?= base_url('admin/orders/' . $order['id'] . '/nota'); ?>">
-                        Cetak Nota
-                    </a>
-                    <a class="btn btn-outline-secondary" target="_blank" href="<?= base_url('admin/orders/' . $order['id'] . '/nota/pdf'); ?>">
-                        Download PDF
-                    </a>
-                </div>
+                <a href="<?= base_url('admin/orders') ?>" class="btn btn-light border">Kembali</a>
+                <a target="_blank" href="<?= base_url('admin/orders/' . $order['id'] . '/nota') ?>" class="btn btn-primary">Cetak Nota</a>
+                <a target="_blank" href="<?= base_url('admin/orders/' . $order['id'] . '/nota/pdf') ?>" class="btn btn-outline-secondary">PDF</a>
 
             </div>
         </div>
     </div>
 </div>
+
 <?php include APPPATH . 'Views/admin/partials/foot.php'; ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>

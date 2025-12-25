@@ -82,7 +82,6 @@
     thead th {
       font-weight: 700;
       color: var(--text-dark);
-      background: transparent;
     }
 
     .btn {
@@ -100,26 +99,9 @@
       border: none;
     }
 
-    .btn-primary:hover {
-      background: var(--accent-dark);
-    }
-
-    .btn-ghost {
-      background: #fff;
-      border: 1px solid var(--ghost-border);
-      color: var(--text-dark);
-    }
-
     .btn-danger {
       background: var(--danger);
       color: #fff;
-      border: none;
-    }
-
-    .btn-inline {
-      display: inline-flex;
-      gap: 8px;
-      flex-wrap: wrap;
     }
 
     .badge {
@@ -145,227 +127,158 @@
       color: #b21d1d;
     }
 
-    @media (max-width:720px) {
-
-      th,
-      td {
-        padding: 10px 8px;
-        font-size: 0.92rem
-      }
-
-      .section {
-        padding: 14px
-      }
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      top: -80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #16a34a;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      z-index: 9999;
+      transition: all .4s ease;
     }
   </style>
-
 </head>
 
 <body>
-  <?php
-  $status = $order['status'] ?? 'pending';
 
-  $labelMap = [
-    'pending'    => 'Menunggu',
-    'menunggu'   => 'Menunggu',
-    'processing' => 'Diproses',
-    'diproses'   => 'Diproses',
-    'completed'  => 'Selesai',
-    'selesai'    => 'Selesai',
-    'canceled'   => 'Batal',
-    'batal'      => 'Batal',
-  ];
+<!-- ========= TOAST NOTIFICATION ========= -->
+<div id="toast"></div>
 
-  $classMap = [
-    'pending'    => 'pending',
-    'menunggu'   => 'pending',
-    'processing' => 'pending',
-    'diproses'   => 'pending',
-    'completed'  => 'paid',
-    'selesai'    => 'paid',
-    'canceled'   => 'cancel',
-    'batal'      => 'cancel',
-  ];
+<?php
+$status = $order['status'] ?? 'pending';
 
-  $statusLabel = $labelMap[$status]  ?? ucfirst($status);
-  $statusClass = $classMap[$status] ?? 'pending';
-  $deliveryRaw  = $order['delivery_method'] ?? 'pickup';
-  $deliveryText = $deliveryRaw === 'delivery'
-    ? 'Diantar'
-    : 'Ambil Sendiri';
-  ?>
+$labelMap = [
+  'pending' => 'Menunggu',
+  'menunggu' => 'Menunggu',
+  'processing' => 'Diproses',
+  'diproses' => 'Diproses',
+  'completed' => 'Selesai',
+  'selesai' => 'Selesai',
+  'canceled' => 'Batal',
+  'batal' => 'Batal',
+];
 
-  <div class="container">
-    <div class="section">
-      <h2>Detail Pesanan #<?= esc($order['code'] ?? $order['id']); ?></h2>
-      <p>Tanggal: <?= date('d M Y H:i', strtotime($order['created_at'] ?? 'now')); ?></p>
-      <p>Nama: <b><?= esc($order['customer_name'] ?? ($user['name'] ?? '-')); ?></b></p>
-      <p>Total: <b>Rp <?= number_format((int)($order['total_amount'] ?? 0), 0, ',', '.'); ?></b></p>
-      <p>Metode: <b><?= esc($deliveryText); ?></b></p>
+$classMap = [
+  'pending' => 'pending',
+  'menunggu' => 'pending',
+  'processing' => 'pending',
+  'diproses' => 'pending',
+  'completed' => 'paid',
+  'selesai' => 'paid',
+  'canceled' => 'cancel',
+  'batal' => 'cancel',
+];
 
-      <?php if ($deliveryRaw === 'delivery'): ?>
-        <?php
-        $loc = trim(
-          (string)($order['address_building'] ?? '') .
-            (!empty($order['address_room']) ? ' - ' . $order['address_room'] : '')
-        );
-        ?>
-        <?php if ($loc !== ''): ?>
-          <p>Lokasi: <b><?= esc($loc); ?></b></p>
-        <?php endif; ?>
+$statusLabel = $labelMap[$status] ?? ucfirst($status);
+$statusClass = $classMap[$status] ?? 'pending';
 
-        <?php if (!empty($order['address_note'])): ?>
-          <p style="font-size: .9rem; color:#666;">
-            Catatan: <?= esc($order['address_note']); ?>
-          </p>
-        <?php endif; ?>
-      <?php endif; ?>
-      <p>Status:
-        <span
-          id="orderStatusBadge"
-          class="badge <?= $statusClass; ?>"
-          data-status="<?= esc($status); ?>">
-          <?= esc($statusLabel); ?>
-        </span>
-      </p>
-      <p>
-        Status Pembayaran:
-        <b>
-          <?= $paymentStatus === 'paid' ? 'Sudah Dibayar' : 'Belum Dibayar'; ?>
-        </b>
-      </p>
-    </div>
+$deliveryRaw = $order['delivery_method'] ?? 'pickup';
+$deliveryText = $deliveryRaw === 'delivery' ? 'Diantar' : 'Ambil Sendiri';
+?>
 
-    <div class="section">
-      <h3>Item</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Menu</th>
-            <th>Qty</th>
-            <th>Harga</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          $grouped = [];
+<div class="container">
 
-          foreach (($order['items'] ?? []) as $it) {
-            $key = $it['menu_id'] ?? $it['id'] ?? $it['name'];
-
-            $qty   = (int)($it['qty'] ?? 0);
-            $price = (int)($it['price'] ?? 0);
-            $sub   = (int)($it['subtotal'] ?? ($price * $qty));
-
-            if (!isset($grouped[$key])) {
-              $grouped[$key] = [
-                'name'     => $it['name'] ?? '',
-                'qty'      => $qty,
-                'price'    => $price,
-                'subtotal' => $sub,
-              ];
-            } else {
-              $grouped[$key]['qty']      += $qty;
-              $grouped[$key]['subtotal']  = $grouped[$key]['qty'] * $grouped[$key]['price'];
-            }
-          }
-
-          $grandTotal = 0;
-          foreach ($grouped as $row):
-            $grandTotal += $row['subtotal'];
-          ?>
-            <tr>
-              <td><?= esc($row['name']); ?></td>
-              <td><?= $row['qty']; ?></td>
-              <td>Rp <?= number_format($row['price'], 0, ',', '.'); ?></td>
-              <td>Rp <?= number_format($row['subtotal'], 0, ',', '.'); ?></td>
-            </tr>
-          <?php endforeach; ?>
-
-          <tr>
-            <td style="font-weight:bold;">Total</td>
-            <td></td>
-            <td></td>
-            <td style="font-weight:bold;">Rp <?= number_format($grandTotal, 0, ',', '.'); ?></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="btn-inline" style="margin-top:12px">
-        <a href="<?= site_url('/'); ?>" class="btn btn-ghost">Kembali</a>
-        <?php if (in_array($status, ['pending', 'menunggu'], true)): ?>
-          <a href="<?= site_url('menu'); ?>" class="btn btn-primary">Tambah Pesanan</a>
-        <?php endif; ?>
-
-        <?php
-        if (in_array(needle: $status, haystack: ['pending', 'menunggu'], strict: true) && $paymentStatus !== 'paid'): ?>
-          <a href="<?= site_url(relativePath: 'p/payment/' . $order['id']); ?>" class="btn btn-primary">
-            Bayar Sekarang
-          </a>
-        <?php endif; ?>
-
-        <?php
-        if (in_array(needle: $status, haystack: ['pending', 'menunggu'], strict: true)): ?>
-          <form action="<?= site_url(relativePath: 'p/orders/' . $order['id'] . '/delete'); ?>"
-            method="post"
-            onsubmit="return confirm('Yakin ingin membatalkan pesanan?');"
-            style="display:inline">
-            <?= csrf_field(); ?>
-            <button type="submit" class="btn btn-danger">Hapus / Batalkan</button>
-          </form>
-        <?php endif; ?>
-      </div>
-    </div>
+  <div class="section">
+    <h2>Detail Pesanan #<?= esc($order['code']); ?></h2>
+    <p>Tanggal: <?= date('d M Y H:i', strtotime($order['created_at'])); ?></p>
+    <p>Nama: <b><?= esc($order['customer_name'] ?? $user['name']); ?></b></p>
+    <p>Total: <b>Rp <?= number_format($order['total_amount'], 0, ',', '.'); ?></b></p>
+    <p>Status: <span class="badge <?= $statusClass; ?>"><?= $statusLabel; ?></span></p>
+    <p>
+      Status Pembayaran:
+      <b><?= $paymentStatus === 'paid' ? 'Sudah Dibayar' : 'Belum Dibayar'; ?></b>
+    </p>
   </div>
-  <script>
-    
-    (function() {
-      const badge = document.getElementById('orderStatusBadge');
-      if (!badge) return;
 
-      const orderId = <?= (int) $order['id']; ?>;
-      const checkUrl = "<?= site_url('p/orders/' . $order['id'] . '/check'); ?>";
+  <div class="section">
+    <h3>Item</h3>
 
-      function pollStatus() {
-        fetch(checkUrl, {
-            headers: {
-              'Accept': 'application/json'
-            }
-          })
-          .then(res => res.ok ? res.json() : null)
-          .then(data => {
-            if (!data || !data.ok) return;
+    <table>
+      <thead>
+        <tr>
+          <th>Menu</th>
+          <th>Qty</th>
+          <th>Harga</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $total = 0;
+        foreach ($order['items'] as $it):
+          $total += $it['subtotal'];
+        ?>
+        <tr>
+          <td><?= esc($it['name']); ?></td>
+          <td><?= $it['qty']; ?></td>
+          <td>Rp <?= number_format($it['price'], 0, ',', '.'); ?></td>
+          <td>Rp <?= number_format($it['subtotal'], 0, ',', '.'); ?></td>
+        </tr>
+        <?php endforeach; ?>
+        <tr>
+          <td><b>Total</b></td>
+          <td></td>
+          <td></td>
+          <td><b>Rp <?= number_format($total, 0, ',', '.'); ?></b></td>
+        </tr>
+      </tbody>
+    </table>
 
-            const oldStatus = badge.dataset.status || '';
-            const newStatus = data.status || '';
+    <div class="btn-inline" style="margin-top:12px">
+      <a href="<?= site_url('/'); ?>" class="btn btn-ghost">Kembali</a>
 
-            if (oldStatus !== newStatus) {
-              badge.dataset.status = newStatus;
-              badge.textContent = data.statusLabel || newStatus;
+      <?php if (in_array($status, ['pending','menunggu']) && $paymentStatus !== 'paid'): ?>
+        <a href="<?= site_url('p/payment/' . $order['id']); ?>" class="btn btn-primary">Bayar Sekarang</a>
+      <?php endif; ?>
 
-              badge.className = 'badge ' + (data.statusClass || '');
+      <?php if (in_array($status, ['pending','menunggu'])): ?>
+        <form action="<?= site_url('p/orders/' . $order['id'] . '/delete'); ?>"
+              method="post"
+              onsubmit="return confirm('Yakin ingin membatalkan pesanan?');"
+              style="display:inline">
+          <?= csrf_field(); ?>
+          <button type="submit" class="btn btn-danger">Hapus / Batalkan</button>
+        </form>
+      <?php endif; ?>
+    </div>
 
-              badge.style.transition = 'transform .2s ease, box-shadow .2s ease';
-              badge.style.transform = 'scale(1.08)';
-              badge.style.boxShadow = '0 0 0 4px rgba(255, 200, 150, 0.5)';
+  </div>
+</div>
 
-              setTimeout(() => {
-                badge.style.transform = 'scale(1)';
-                badge.style.boxShadow = 'none';
-              }, 220);
-            }
-          })
-          .catch(() => {
-          });
-      }
+<!-- ========= TOAST SCRIPT ========= -->
+<script>
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
 
-      pollStatus();
-      setInterval(pollStatus, 30000);
-    })();
-    
-  </script>
-</body>
-</html>
+    toast.innerText = message;
+
+    toast.style.background = (type === 'success') ? '#16a34a' : '#dc2626';
+
+    toast.style.top = '20px';
+    toast.style.opacity = '1';
+
+    setTimeout(() => {
+      toast.style.top = '-80px';
+      toast.style.opacity = '0';
+    }, 3000);
+  }
+
+  <?php if (session('success')): ?>
+      showToast("<?= esc(session('success')) ?>", 'success');
+  <?php endif; ?>
+
+  <?php if (session('error')): ?>
+      showToast("<?= esc(session('error')) ?>", 'error');
+  <?php endif; ?>
+</script>
+
 </body>
 </html>
