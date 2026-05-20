@@ -10,6 +10,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="<?= base_url('assets/sbadmin2/css/sb-admin-2.min.css'); ?>" rel="stylesheet">
   <link href="<?= base_url('assets/sbadmin2/css/custom.css'); ?>" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#ff4766;
+      --bg:#f9f5f7;
+      --muted:#6b6b75;
+      --card:#ffffff;
+    }
+  </style>
 </head>
 
 <body id="page-top">

@@ -11,301 +11,299 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg-page: #fdeff0;
-      --text-dark: #0b2130;
-      --muted: #6b7280;
-      --accent: #ff4766;
-      --accent-dark: #e03f5d;
-      --card-bg: #ffffff;
-      --shadow-soft: 0 10px 30px rgba(10, 25, 40, 0.06);
+    main {
+      padding-top: 100px;
+      padding-bottom: 60px;
     }
 
-    /* NAVBAR – sama seperti menu.php */
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 18px;
-      margin: 0;
-      padding: 0;
-      align-items: center;
-    }
-
-    nav a {
-      text-decoration: none;
-      color: var(--text-dark);
-      font-weight: 500;
-    }
-
-    nav a.active {
-      color: var(--text-dark);
-      border-bottom: none;
-    }
-
-    nav a:hover {
-      color: var(--accent);
-      border-bottom: 2px solid var(--accent);
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background: var(--bg-page);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-dark);
-      overflow-x: hidden;
-    }
-
-    .about-wrapper {
-      max-width: 1150px;
+    .about-section {
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 130px 32px 72px;
-    }
-
-    .about-two-col {
       display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-      gap: 60px;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 48px;
       align-items: center;
     }
 
-    .about-label {
-      font-size: .9rem;
+    .about-content h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 0 0 12px;
+      color: var(--text);
+    }
+
+    .about-badge {
+      display: inline-block;
+      background: var(--chip);
+      color: var(--brand);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
       font-weight: 600;
-      letter-spacing: .06em;
+      margin-bottom: 12px;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 10px;
+      letter-spacing: 0.05em;
     }
 
-    .about-title {
-      font-size: 2.6rem;
-      line-height: 1.2;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .about-title span {
-      color: var(--accent);
-    }
-
-    .about-text p {
-      margin-bottom: 10px;
-      font-size: .97rem;
-      line-height: 1.7;
+    .about-content p {
       color: var(--muted);
-      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+    }
+
+    .about-highlight {
+      margin-top: 24px;
+      padding: 20px;
+      background: var(--chip);
+      border-left: 4px solid var(--brand);
+      border-radius: 12px;
+    }
+
+    .about-highlight h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .about-highlight p {
+      margin: 0;
+      font-size: 0.9rem;
     }
 
     .about-images {
-      position: relative;
-      width: 420px;
-      height: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .suasana-kantin-img {
+    .about-images img {
       width: 100%;
       height: auto;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.15);
-    }
-
-    .makanan-img {
-      position: absolute;
-      left: -40px;
-      top: 140px;
-      width: 300px;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 22px 50px rgba(15, 23, 42, 0.22);
-    }
-
-    .suasana-kantin-img img,
-    .makanan-img img {
-      width: 100%;
-      height: 100%;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       object-fit: cover;
     }
 
-    @media(max-width: 900px) {
-      .about-images {
-        width: 300px;
-        height: 300px;
-      }
-
-      .makanan-img {
-        width: 200px;
-        top: 110px;
-        left: -30px;
-      }
+    .features {
+      margin-top: 80px;
     }
 
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 18px 52px;
-      background: var(--bg-page);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-      z-index: 999;
+    .features h3 {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      color: var(--text);
     }
-     @media (max-width: 768px) {
-      nav {
-        position: fixed;
-        top: 64px;
-        right: 12px;
-        background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, .15);
-        width: 200px;
-        display: none;
-        z-index: 9999;
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .feature-icon {
+      font-size: 2.4rem;
+      color: var(--brand);
+      margin-bottom: 16px;
+    }
+
+    .feature-card h4 {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding-top: 80px;
+        padding-bottom: 40px;
       }
 
-      nav.active {
-        display: block;
+      .about-section {
+        grid-template-columns: 1fr;
+        gap: 32px;
       }
 
-      nav ul {
-        flex-direction: column;
-        padding: 10px;
-        gap: 8px;
+      .about-content h2 {
+        font-size: 1.4rem;
       }
 
-      nav ul li a {
-        display: block;
-        padding: 10px 12px;
-        border-radius: 10px;
+      .features h3 {
+        font-size: 1.3rem;
+        margin-bottom: 24px;
       }
 
-      .hamburger {
-        display: block;
-        font-size: 22px;
-        cursor: pointer;
+      .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .feature-card {
+        padding: 20px;
       }
     }
-    /* ============================= */
-/* FIX ABOUT PAGE MOBILE LAYOUT */
-/* ============================= */
-@media (max-width: 768px) {
-
-  .about-wrapper {
-    padding: 100px 20px 60px;
-  }
-
-  .about-two-col {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .about-title {
-    font-size: 1.9rem;
-    line-height: 1.25;
-  }
-
-  .about-text p {
-    max-width: 100%;
-    font-size: .95rem;
-  }
-
-  /* ==== FIX IMAGE SECTION ==== */
-  .about-images {
-    width: 100%;
-    height: auto;
-    position: relative;
-  }
-
-  .suasana-kantin-img {
-    width: 100%;
-  }
-
-  .makanan-img {
-    position: static;
-    width: 100%;
-    margin-top: 16px;
-  }
-
-  .suasana-kantin-img img,
-  .makanan-img img {
-    border-radius: 16px;
-  }
-}
-
   </style>
 </head>
 
 <body>
+  <?php
+  $contactPhone = getenv('CONTACT_PHONE') ?: (isset($contactPhone) ? $contactPhone : '08123456789');
+  $telNormalized = preg_replace('/[^\d+]/', '', $contactPhone);
+  $waNormalized = preg_replace('/[^\d]/', '', preg_replace('/^\+/', '', $contactPhone));
+  $waMessage = rawurlencode("Halo Kantin G'penk, saya ingin bertanya.");
+  $telDisplay = $contactPhone;
+  ?>
 
-  <header>
-    <div class="logo"><i class="fas fa-utensils"></i> Kantin G'penk</div>
-    <nav>
-      <ul>
-        <li><a href="<?= site_url('/'); ?>">Home</a></li>
-        <li><a href="<?= site_url('menu'); ?>">Menu</a></li>
-        <li><a href="<?= site_url('about'); ?>" class="active">About Us</a></li>
-      </ul>
-    </nav>
-    <div class="hamburger">
-      <i class="fas fa-bars"></i>
-    </div>
-  </header>
-
-  <main class="about-wrapper">
-    <section class="about-two-col">
-
-      <div class="about-text">
-        <div class="about-label">About Us</div>
-        <h1 class="about-title">Membawa makanan kantin<br><span>langsung ke lokasimu</span></h1>
-
-        <p>Kantin G'penk hadir untuk memudahkan mahasiswa dan staf kampus menikmati makanan favorit tanpa harus antre panjang di kantin.</p>
-        <p>Cukup pesan lewat website, pilih diantar atau ambil sendiri, dan kami akan menyiapkan pesananmu dengan bahan yang segar, higienis, dan harga yang tetap ramah di kantong.</p>
-        <p>Kami bekerja sama langsung dengan pengelola kantin agar menu selalu up-to-date dan proses pemesanan jadi lebih rapi dan terdata.</p>
-      </div>
-
-      <div class="about-images">
-        <div class="suasana-kantin-img">
-          <img src="<?= base_url('assets/img/suasana-kantin.jpeg'); ?>" alt="Suasana kantin">
-        </div>
-
-        <div class="makanan-img">
-          <img src="<?= base_url('assets/img/makanan.jpg'); ?>" alt="Menu makanan kantin">
+  <div class="container">
+    <header class="page-header">
+      <div class="header-brand">
+        <div class="brand-icon"><i class="fas fa-utensils"></i></div>
+        <div>
+          <span class="brand-title">Kantin G'penk</span>
+          <span class="brand-subtitle">Pesan makanan & minuman modern</span>
         </div>
       </div>
-    </section>
-  </main>
- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const hamburger = document.querySelector('.hamburger');
-      const nav = document.querySelector('header nav');
-      const icon = hamburger.querySelector('i');
 
-      if (!hamburger || !nav) return;
+      <div class="header-actions">
+        <div class="header-nav">
+          <nav aria-label="Primary navigation">
+            <ul class="nav-links">
+              <li><a href="<?= site_url('/'); ?>">Home</a></li>
+              <li><a href="<?= site_url('menu'); ?>">Menu</a></li>
+              <li><a href="<?= site_url('about'); ?>" class="active">About</a></li>
+              <li><a href="<?= site_url('contact'); ?>">Contact</a></li>
+            </ul>
+          </nav>
+        </div>
 
-      hamburger.addEventListener('click', function() {
+        <?php if (session('user')): ?>
+          <?php if (session('user.role') === 'admin'): ?>
+            <a href="<?= base_url('admin'); ?>" class="btn btn-primary">Dashboard</a>
+          <?php else: ?>
+            <a href="<?= site_url('p/orders'); ?>" class="icon-btn header-cart" aria-label="Keranjang">
+              <i class="fas fa-shopping-bag"></i>
+              <span class="badge cart-count">0</span>
+            </a>
+          <?php endif; ?>
+        <?php else: ?>
+          <a href="<?= base_url('login'); ?>" class="btn">Sign In</a>
+          <a href="<?= base_url('register'); ?>" class="btn btn-primary">Sign Up</a>
+        <?php endif; ?>
+
+        <button class="hamburger icon-btn d-md-none" id="hamburger" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="about-section">
+        <div class="about-content">
+          <span class="about-badge">Tentang Kami</span>
+          <h2>Membawa Makanan Kantin Langsung Ke Lokasimu</h2>
+
+          <p>Kantin G'penk hadir untuk memudahkan mahasiswa dan staf kampus menikmati makanan favorit tanpa harus antre panjang di kantin. Kami memahami kesibukan kamu, itulah mengapa kami ciptakan platform pemesanan yang mudah, cepat, dan reliable.</p>
+
+          <p>Cukup pesan lewat website, pilih diantar atau ambil sendiri, dan kami akan menyiapkan pesananmu dengan bahan yang segar, higienis, dan harga yang tetap ramah di kantong.</p>
+
+          <div class="about-highlight">
+            <h4><i class="fas fa-handshake" style="color: var(--brand); margin-right: 8px;"></i> Kolaborasi Langsung</h4>
+            <p>Kami bekerja sama langsung dengan pengelola kantin agar menu selalu up-to-date dan proses pemesanan jadi lebih rapi dan terdata.</p>
+          </div>
+        </div>
+
+        <div class="about-images">
+          <img src="<?= base_url('assets/img/suasana-kantin.jpeg'); ?>" alt="Suasana kantin G'penk">
+          <img src="<?= base_url('assets/img/makanan.jpg'); ?>" alt="Menu makanan kantin G'penk">
+        </div>
+      </section>
+
+      <section class="features">
+        <h3>Mengapa Pilih Kantin G'penk?</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+            <h4>Cepat & Mudah</h4>
+            <p>Pesan hanya dalam beberapa klik, tanpa perlu antri panjang di kantin.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+            <h4>Segar & Higienis</h4>
+            <p>Semua makanan disiapkan dengan bahan berkualitas dan standar kebersihan tinggi.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-tag"></i></div>
+            <h4>Harga Terjangkau</h4>
+            <p>Tetap ramah di kantong dengan menu variatif untuk setiap budget.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-box"></i></div>
+            <h4>Dua Pilihan Pengambilan</h4>
+            <p>Ambil sendiri atau minta diantar sesuai kenyamanan kamu.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-calendar"></i></div>
+            <h4>Menu Terbarui</h4>
+            <p>Daftar menu selalu up-to-date setiap harinya langsung dari kantin.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-star"></i></div>
+            <h4>Rating Tinggi</h4>
+            <p>Dipercaya oleh ribuan mahasiswa dengan rating 4.9/5 dari pelanggan.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    window.APP_BASE = "<?= rtrim(base_url('/'), '/'); ?>/";
+  </script>
+  <script src="<?= base_url('assets/js/script.js'); ?>"></script>
+
+  <script>
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.querySelector('header nav');
+
+    hamburger?.addEventListener('click', function() {
+      if (nav) {
         nav.classList.toggle('active');
+      }
+    });
 
-        // toggle icon ☰ ↔ X
-        if (nav.classList.contains('active')) {
-          icon.classList.remove('fa-bars');
-          icon.classList.add('fa-times');
-        } else {
-          icon.classList.remove('fa-times');
-          icon.classList.add('fa-bars');
-        }
-      });
-
-      // klik di luar menu → tutup
-      document.addEventListener('click', function(e) {
-        if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
-          nav.classList.remove('active');
-          icon.classList.remove('fa-times');
-          icon.classList.add('fa-bars');
-        }
-      });
+    document.addEventListener('click', function(e) {
+      if (!nav || !hamburger) return;
+      if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+        nav.classList.remove('active');
+      }
     });
   </script>
 </body>

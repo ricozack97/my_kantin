@@ -14,23 +14,27 @@
 (function () {
   const heroImg = document.getElementById('heroImage');
   if (!heroImg) return;
+
   document.querySelectorAll('.dish').forEach(card => {
     const img = card.getAttribute('data-img');
     if (!img) return;
+
     card.addEventListener('mouseenter', () => {
       heroImg.dataset.prev = heroImg.src;
       heroImg.src = (window.ASSETS_BASE || '') + 'assets/img/' + img;
     });
+
     card.addEventListener('mouseleave', () => {
       if (heroImg.dataset.prev) heroImg.src = heroImg.dataset.prev;
     });
   });
 })();
 
-// ====== Search UX (kosmetik, tidak sentuh backend) ======
+// ====== Search UX sederhana ======
 (function () {
   const input = document.getElementById('qsearch');
   if (!input) return;
+
   input.addEventListener('input', () => {
     const q = input.value.toLowerCase().trim();
     document.querySelectorAll('.dish').forEach(d => {
@@ -41,30 +45,48 @@
 })();
 
 // ====== Badge jumlah keranjang ======
+function setCartCount(count) {
+  const total = Number.parseInt(count, 10) || 0;
+
+  document.querySelectorAll('.cart-count').forEach(el => {
+    el.textContent = total > 99 ? '99+' : String(total);
+    el.classList.toggle('show', total > 0);
+    el.setAttribute('aria-label', `${total} item di keranjang`);
+  });
+}
+
 async function refreshCartCount() {
   try {
-    // gunakan base url dari inline script (lihat “tambahan kecil di HTML”)
     const base = window.APP_BASE || '/';
     const res = await fetch(base + 'cart/count', { credentials: 'same-origin' });
-    if (!res.ok) return; // diam saja jika endpoint tidak ada
+    if (!res.ok) return;
+
     const data = await res.json();
-    const el = document.querySelector('.cart-count');
-    if (el && typeof data.count !== 'undefined') {
-      el.textContent = data.count;
-      el.style.display = Number(data.count) > 0 ? 'block' : 'none';
+    if (typeof data.count !== 'undefined') {
+      setCartCount(data.count);
     }
   } catch (e) {
-    // diam: tidak ganggu halaman jika API tidak tersedia
+    // Tidak mengganggu halaman jika endpoint belum tersedia.
   }
-  // ====== Search (AJAX ke /menu/search) ======
+}
+
+window.setCartCount = setCartCount;
+window.refreshCartCount = refreshCartCount;
+
+document.addEventListener('DOMContentLoaded', refreshCartCount);
+
+// ====== Search AJAX untuk halaman lama yang memakai #qsearch ======
 (function () {
   const input = document.getElementById('qsearch');
   const list = document.querySelector('.dishes');
   if (!input || !list) return;
 
-  // debounce helper
-  const debounce = (fn, d=300) => {
-    let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), d); };
+  const debounce = (fn, d = 300) => {
+    let t;
+    return (...a) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn(...a), d);
+    };
   };
 
   const rupiah = (n) => new Intl.NumberFormat('id-ID').format(n);
@@ -72,7 +94,7 @@ async function refreshCartCount() {
   function render(items) {
     list.innerHTML = items.map(m => `
       <div class="dish" data-img="${m.image}">
-        <img src="${(window.ASSETS_BASE||'')}assets/img/${m.image}" alt="${m.name}">
+        <img src="${(window.ASSETS_BASE || '')}assets/img/${m.image}" alt="${m.name}">
         <h3>${m.name}</h3>
         <p>${m.desc ?? ''}</p>
         <span class="price">Rp ${rupiah(m.price)}</span>
@@ -85,25 +107,29 @@ async function refreshCartCount() {
       </div>
     `).join('');
 
-    // rebind add-to-cart (tetap pakai endpoint lama kamu)
     list.querySelectorAll('.add-to-cart').forEach(btn => {
       btn.addEventListener('click', async () => {
         const payload = new URLSearchParams();
         payload.append('id', btn.dataset.id);
         payload.append('qty', '1');
-        const res = await fetch((window.APP_BASE||'/')+'cart/add', {
+
+        const res = await fetch((window.APP_BASE || '/') + 'cart/add', {
           method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: payload.toString()
         });
-        const data = await res.json().catch(() => ({ok:false}));
+        const data = await res.json().catch(() => ({ ok: false }));
+
         if (data.ok) {
-          const countEl = document.querySelector('.cart-count');
-          if (countEl) countEl.textContent = parseInt(countEl.textContent || '0') + 1;
-          alert('✅ Ditambahkan ke keranjang: ' + btn.dataset.name);
+          if (typeof data.cart_count !== 'undefined') {
+            setCartCount(data.cart_count);
+          } else {
+            refreshCartCount();
+          }
+          alert('Ditambahkan ke keranjang: ' + btn.dataset.name);
         } else {
           alert(data.msg || 'Gagal menambah.');
-          if (typeof refreshCartCount === 'function') refreshCartCount();
+          refreshCartCount();
         }
       });
     });
@@ -112,19 +138,14 @@ async function refreshCartCount() {
   async function doSearch(q) {
     try {
       const url = (window.APP_BASE || '/') + 'menu/search?q=' + encodeURIComponent(q || '');
-      const res = await fetch(url, {credentials:'same-origin'});
+      const res = await fetch(url, { credentials: 'same-origin' });
       const data = await res.json();
       if (data && data.ok) render(data.items);
-    } catch(e) { /* diam */ }
+    } catch (e) {
+      // Pencarian tambahan ini boleh gagal diam-diam.
+    }
   }
 
-  // initial: tampilkan default list
   doSearch('');
-
   input.addEventListener('input', debounce(() => doSearch(input.value.trim()), 350));
 })();
-
-}
-
-// panggil sekali saat load
-refreshCartCount();

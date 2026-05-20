@@ -4,72 +4,59 @@ include APPPATH . 'Views/admin/partials/head.php';
 ?>
 
 <style>
-    .badge-wait {
-        background-color: #f6c23e;
-        color: #fff;
-    }
+  /* Reuse theme variables from partial head.php */
+  .card { border-radius:16px; box-shadow:0 12px 30px rgba(0,0,0,0.06); border:none; }
+  .card-header { background:transparent; border-bottom:none; padding:18px 24px; }
+  .card-header h6 { color:var(--primary); font-weight:700; margin:0; }
 
-    .badge-proc {
-        background-color: #4e73df;
-        color: #fff;
-    }
+  /* Table spacing and style */
+  .table { border-collapse: separate; border-spacing: 0 10px; }
+  .table thead th { background:transparent; border:none; color:var(--muted); font-weight:600; padding:12px 18px; }
+  .table tbody tr { background:var(--card); border-radius:12px; box-shadow:0 6px 14px rgba(0,0,0,0.03); }
+  .table td { vertical-align: middle; border: none !important; padding:14px 18px; }
 
-    .badge-done {
-        background-color: #1cc88a;
-        color: #fff;
-    }
+  /* Status badges */
+  .order-pill {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    min-height:30px;
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:0.78rem;
+    font-weight:600;
+    line-height:1;
+    white-space:nowrap;
+  }
 
-    .badge-cancel {
-        background-color: #e74a3b;
-        color: #fff;
-    }
+  .badge-wait { background:#f6c23e; color:#fff; }
+  .badge-proc { background:#4e73df; color:#fff; }
+  .badge-done { background:#1cc88a; color:#fff; }
+  .badge-cancel { background:#e74a3b; color:#fff; }
 
-    .badge-pay-unpaid {
-        background-color: #f6c23e;
-        color: #fff;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
+  /* Payment badges reuse */
+  .badge-pay-unpaid { background:var(--primary); color:#fff; }
+  .badge-pay-paid { background:#1cc88a; color:#fff; }
+  .badge-pay-failed { background:#e74a3b; color:#fff; }
 
-    .badge-pay-paid {
-        background-color: #1cc88a;
-        color: #fff;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
+  /* Actions */
+  .btn-detail { background:var(--primary); color:#fff; border:none; box-shadow:0 8px 20px rgba(255,71,102,0.12); text-decoration:none; }
+  .btn-detail:hover { color:#fff; text-decoration:none; }
+  .btn-text,
+  .badge-text { margin-left:0; }
 
-    .badge-pay-failed {
-        background-color: #e74a3b;
-        color: #fff;
-        border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
+  /* Pagination */
+  .pagination li { display:inline-block; margin:0 4px; }
+  .pagination li a, .pagination li span { padding:8px 12px; border-radius:8px; border:1px solid transparent; background:#fff; color:#555; }
+  .pagination li.active span { background:var(--primary); color:#fff; border-color:var(--primary); }
 
-    .pagination li {
-        display: inline-block;
-        margin: 0 3px;
-    }
-
-    .pagination li a,
-    .pagination li span {
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: 1px solid #ddd;
-        background: #fff;
-        color: #555;
-    }
-
-    .pagination li.active span {
-        background: #ff4766;
-        color: #fff;
-        border-color: #ff4766;
-    }
+  /* Responsive tweaks */
+  @media (max-width:576px) {
+    .table thead th { font-size:0.86rem; }
+    .table td { padding:10px 12px; }
+    .btn-text { display:none; }
+  }
 </style>
 
 <h1 class="h3 mb-4 text-gray-800">Proses Menu / Pesanan</h1>
@@ -168,21 +155,35 @@ include APPPATH . 'Views/admin/partials/head.php';
                                 <td><?= esc(date('d M Y H:i', strtotime($o['created_at']))); ?></td>
                                 <td><?= esc($o['customer_name'] ?? '-'); ?></td>
                                 <td>Rp <?= number_format((int)$o['total_amount'], 0, ',', '.'); ?></td>
-                                <td>
-                                    <span class="badge badge-pill <?= esc($clsKey); ?>">
-                                        <?= esc($label); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="<?= esc($payClass); ?>">
-                                        <?= esc($payLabel); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <a href="<?= base_url('admin/orders/' . $o['id']); ?>"
-                                        class="btn btn-sm btn-primary">
-                                        Lihat Detail
-                                </td>
+                                                                <td>
+                                                                        <span class="badge order-pill <?= esc($clsKey); ?>">
+                                                                                <?php if ($clsKey === 'badge-done'): ?>
+                                                                                    <i class="fas fa-check-circle"></i>
+                                                                                <?php elseif ($clsKey === 'badge-cancel'): ?>
+                                                                                    <i class="fas fa-times-circle"></i>
+                                                                                <?php else: ?>
+                                                                                    <i class="fas fa-clock"></i>
+                                                                                <?php endif; ?>
+                                                                                <span class="badge-text"> <?= esc($label); ?></span>
+                                                                        </span>
+                                                                </td>
+                                                                <td>
+                                                                        <span class="order-pill <?= esc($payClass); ?>">
+                                                                                <?php if ($payClass === 'badge-pay-paid'): ?>
+                                                                                    <i class="fas fa-wallet"></i>
+                                                                                <?php elseif ($payClass === 'badge-pay-failed'): ?>
+                                                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                                                <?php else: ?>
+                                                                                    <i class="fas fa-credit-card"></i>
+                                                                                <?php endif; ?>
+                                                                                <span class="badge-text"> <?= esc($payLabel); ?></span>
+                                                                        </span>
+                                                                </td>
+                                                                <td>
+                                                                        <a href="<?= base_url('admin/orders/' . $o['id']); ?>" class="btn-detail order-pill">
+                                                                                <i class="fas fa-eye"></i><span class="btn-text">Lihat Detail</span>
+                                                                        </a>
+                                                                </td>
                             </tr>
                         <?php endforeach; ?>
 

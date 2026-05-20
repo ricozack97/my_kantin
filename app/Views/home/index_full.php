@@ -21,488 +21,71 @@
       padding: 0;
       max-width: 100%;
       overflow-x: hidden;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 1), rgba(248, 250, 252, 1) 48%);
     }
 
-    header nav a {
-      color: var(--nav-text);
-      text-decoration: none;
-      padding-bottom: 6px;
-      transition: color .22s, border-color .22s, transform .18s;
-      border-bottom: 2px solid transparent;
-      display: inline-block;
-    }
-
-    header nav a:hover {
-      color: var(--nav-accent);
-      border-bottom-color: var(--nav-accent);
-    }
-
-    header nav a.active {
-      color: var(--nav-accent);
-      border-bottom-color: var(--nav-accent);
-    }
-
-    header nav ul {
-      gap: 18px;
-      display: flex;
-      align-items: center;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    @media (max-width:720px) {
-      header nav a {
-        padding-bottom: 4px;
-      }
-    }
-
-    .hero-image,
-    .dishes .dish,
-    .dishes .dish img {
-      background: transparent !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-    }
-
-    .hero-image img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: none;
-      transform-origin: 50% 50%;
-      animation: kk-hero-spin 40s linear infinite;
-      display: block;
-    }
-
-    @keyframes kk-hero-spin {
-      from {
-        transform: rotate(0deg);
-      }
-
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .dishes .dish img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 12px;
-      transition: transform 1.6s cubic-bezier(.2, .9, .2, 1);
-      transform-origin: 50% 50%;
-      will-change: transform;
-      box-shadow: none;
-      background: transparent;
-      display: block;
-    }
-
-    @media (min-width:560px) {
-      .hero-image {
-        max-width: 460px;
-      }
-
-      .dishes .dish img {
-        height: 150px;
-      }
-    }
-
-    @media (min-width:768px) {
-      .hero-image {
-        max-width: 520px;
-      }
-
-      .dishes .dish img {
-        height: 160px;
-      }
-    }
-
-    .whatsapp-btn {
-      background: #25D366;
-      color: #fff;
-      border-radius: 8px;
-      padding: 8px 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none
-    }
-
-    .contact-modal-backdrop {
+    .toast {
       position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, .35);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999
-    }
-
-    .contact-modal {
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
       background: #fff;
-      border-radius: 12px;
-      padding: 18px 20px;
-      max-width: 420px;
-      width: 92%;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, .18)
-    }
-
-    .contact-modal h3 {
-      margin: 0 0 8px
-    }
-
-    .contact-modal .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 14px;
-      justify-content: flex-end
-    }
-
-    .contact-modal .phone {
-      font-weight: 700;
-      color: #111;
-      margin-top: 6px
-    }
-
-    @media (max-width:480px) {
-      .contact-modal {
-        padding: 14px
-      }
-
-      .whatsapp-btn {
-        padding: 7px 10px
-      }
-    }
-
-    #deliveryModal,
-    #addressModal {
-      backdrop-filter: blur(3px);
-      opacity: 0;
-      transition: opacity .25s ease, background .25s ease;
-    }
-
-    #deliveryModal.show,
-    #addressModal.show {
-      opacity: 1;
-    }
-
-    #deliveryModal .contact-modal,
-    #addressModal .contact-modal {
-      max-width: 480px;
-      border-radius: 20px;
-      padding: 20px 22px;
-      box-shadow: 0 18px 50px rgba(15, 23, 42, .25);
-      transform: translateY(18px) scale(.94);
-      opacity: 0;
-      transition: transform .25s ease, opacity .25s ease;
-    }
-
-    #deliveryModal.show .contact-modal,
-    #addressModal.show .contact-modal {
-      transform: translateY(0) scale(1);
-      opacity: 1;
-    }
-
-    #deliveryModal .delivery-options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    #addressModal .delivery-options::-webkit-scrollbar-thumb:hover {
-      background: #9ca3af;
-    }
-
-    #deliveryModal .delivery-pill,
-    #addressModal .delivery-pill {
-      width: 100%;
-      border: 1px solid #e5e7eb;
-      background: #fff;
-      border-radius: 999px;
-      padding: 10px 14px;
+      border-left: 6px solid #FF6B35;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      padding: 16px 28px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      text-align: left;
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
-    }
-
-    #deliveryModal .delivery-pill .icon,
-    #addressModal .delivery-pill .icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f3f4ff;
-      color: #4f46e5;
-      flex-shrink: 0;
-    }
-
-    #deliveryModal .delivery-pill .text,
-    #addressModal .delivery-pill .text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    #deliveryModal .delivery-pill .title,
-    #addressModal .delivery-pill .title {
-      font-weight: 600;
-      font-size: 0.94rem;
-      color: #111827;
-    }
-
-    #deliveryModal .delivery-pill .subtitle,
-    #addressModal .delivery-pill .subtitle {
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-
-    #deliveryModal .delivery-pill.primary .icon,
-    #addressModal .delivery-pill.primary .icon {
-      background: #ffe4ea;
-      color: #ef4444;
-    }
-
-    #deliveryModal .delivery-pill.primary .title,
-    #addressModal .delivery-pill.primary .title {
-      color: #b91c1c;
-    }
-
-    #deliveryModal .delivery-pill:hover,
-    #addressModal .delivery-pill:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(15, 23, 42, .15);
-      border-color: #fecaca;
-      background: #fff7f7;
-    }
-
-    #deliveryModal .delivery-pill:active,
-    #addressModal .delivery-pill:active {
-      transform: translateY(0);
-      box-shadow: 0 4px 12px rgba(15, 23, 42, .18);
-    }
-
-    @media (max-width:480px) {
-
-      #deliveryModal .contact-modal,
-      #addressModal .contact-modal {
-        padding: 18px 16px;
-      }
-
-      #deliveryModal .delivery-pill,
-      #addressModal .delivery-pill {
-        border-radius: 16px;
-      }
-    }
-
-    #addressModal .delivery-options {
-      display: none;
-      margin-top: 8px;
-    }
-
-    #addressModal.open .delivery-options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 260px;
-      overflow-y: auto;
-    }
-
-    .dropdown-trigger {
-      border: 1px solid #e5e7eb;
-      padding: 12px 14px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      background: #fff;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .dropdown-trigger i {
-      font-size: 18px;
-      color: #555;
-      transition: transform .25s;
-    }
-
-    #addressModal.open .dropdown-trigger i {
-      transform: rotate(180deg);
-    }
-
-    /*
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 999;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 50px;
-      background: #ffffff;
-    }
-*/
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 20px;
-    }
-
-    .logo i {
-      font-size: 22px;
-      color: #ff4766;
-    }
-
-    .container {
-      padding-top: 110px;
-    }
-
-    @media (max-width: 720px) {
-      .container {
-        padding-top: 95px;
-      }
-
-    }
-
-    @media (max-width: 768px) {
-      nav {
-        position: absolute;
-        top: 70px;
-        right: 12px;
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, .15);
-        padding: 14px 18px;
-        display: none;
-        z-index: 9999;
-      }
-
-      nav.active {
-        display: block;
-      }
-
-      nav ul {
-        flex-direction: column;
-        gap: 14px;
-      }
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       gap: 12px;
-      padding: 14px 16px;
+      z-index: 9999;
+      opacity: 0;
+      animation: fadeSlide 0.6s forwards;
     }
 
-    header .logo {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 1.1rem;
-      white-space: nowrap;
-    }
-
-    .address-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      color: #374151;
-      background: #fff;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      max-width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    header .buttons {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    header .buttons .btn {
-      padding: 7px 12px;
-      font-size: 0.9rem;
-    }
-
-    .hamburger {
+    .toast .icon {
+      background: #FFE7DE;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
+      font-size: 20px;
+      color: #FF6B35;
     }
 
-    @media (min-width: 769px) {
-      .hamburger {
-        display: none;
-      }
+    .toast .msg {
+      font-weight: 600;
+      color: #333;
+      font-size: 1rem;
+    }
 
-      nav {
-        position: static;
-        display: block !important;
-        background: transparent;
-        box-shadow: none;
-        padding: 0;
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
       }
-
-      nav ul {
-        flex-direction: row;
-        gap: 20px;
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
       }
     }
 
-    @media (max-width: 768px) {
-
-      .address-pill {
-        display: none;
-      }
-
-      nav {
-        top: 64px;
-        right: 12px;
-        min-width: 180px;
-      }
-
-      nav ul {
-        align-items: flex-start;
-      }
+    .toast.hide {
+      animation: fadeOut 0.5s forwards;
     }
 
-    @media (min-width: 769px) {
-      .address-pill {
-        max-width: none;
-        overflow: visible;
-        text-overflow: unset;
-        white-space: nowrap;
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translate(-50%, -20px);
       }
     }
-    
   </style>
 </head>
 
-<body>
+<body class="home-page">
   <?php
   $contactPhone = getenv('CONTACT_PHONE') ?: (isset($contactPhone) ? $contactPhone : '08123456789');
   $telNormalized = preg_replace('/[^\d+]/', '', $contactPhone);
@@ -592,50 +175,56 @@
 
   <div class="container">
 
-    <header>
-      <div class="logo"><i class="fas fa-utensils"></i> Kantin G'penk</div>
-
-      <nav id="nav">
-        <ul>
-          <li><a href="<?= base_url('/'); ?>">Home</a></li>
-          <li><a href="<?= base_url('menu'); ?>">Menu</a></li>
-          <li><a href="https://wa.me/<?= esc($waNormalized); ?>?text=<?= esc($waMessage); ?>" id="contactLink">Contact</a></li>
-          <li><a href="<?= base_url('about'); ?>">About Us</a></li>
-        </ul>
-      </nav>
-
-      <?php if (session('user')): ?>
-        <div class="address-pill" title="Lokasi pengantaran kamu">
-          <i class="fas fa-location-dot"></i>
-          <span>
-            <?php
-            if (session('delivery_display')) {
-              echo esc(session('delivery_display'));
-            } elseif (session('user.building')) {
-              $txt = session('user.building');
-              if (session('user.room')) {
-                $txt .= ' - ' . session('user.room');
-              }
-              echo esc($txt);
-            } else {
-              echo 'Gedung belum diatur';
-            }
-            ?>
-          </span>
+    <header class="page-header">
+      <div class="header-brand">
+        <div class="brand-icon"><i class="fas fa-utensils"></i></div>
+        <div>
+          <span class="brand-title">Kantin G'penk</span>
+          <span class="brand-subtitle">Pesan makanan & minuman modern</span>
         </div>
-      <?php endif; ?>
+      </div>
 
+      <div class="header-actions">
+        <div class="header-nav">
+          <nav aria-label="Primary navigation">
+            <ul class="nav-links">
+              <li><a href="<?= base_url('/'); ?>">Home</a></li>
+              <li><a href="<?= base_url('menu'); ?>">Menu</a></li>
+              <li><a href="<?= base_url('about'); ?>">About</a></li>
+              <li><a href="<?= site_url('contact'); ?>">Contact</a></li>
+            </ul>
+          </nav>
+        </div>
 
-      <div class="buttons">
+        <?php if (session('user')): ?>
+          <div class="address-pill" title="Lokasi pengantaran kamu">
+            <i class="fas fa-location-dot"></i>
+            <span>
+              <?php
+              if (session('delivery_display')) {
+                echo esc(session('delivery_display'));
+              } elseif (session('user.building')) {
+                $txt = session('user.building');
+                if (session('user.room')) {
+                  $txt .= ' - ' . session('user.room');
+                }
+                echo esc($txt);
+              } else {
+                echo 'Gedung belum diatur';
+              }
+              ?>
+            </span>
+          </div>
+        <?php endif; ?>
 
         <?php if (session('user')): ?>
           <a href="<?= base_url('logout'); ?>" class="btn">Logout</a>
           <?php if (session('user.role') === 'admin'): ?>
             <a href="<?= base_url('admin'); ?>" class="btn btn-primary">Dashboard</a>
           <?php else: ?>
-            <a href="<?= site_url('p/orders'); ?>" class="btn header-cart" aria-label="Keranjang">
+            <a href="<?= site_url('p/orders'); ?>" class="icon-btn header-cart" aria-label="Keranjang">
               <i class="fas fa-shopping-bag"></i>
-              <span class="cart-count" style="display:none">0</span>
+              <span class="badge cart-count">0</span>
             </a>
           <?php endif; ?>
         <?php else: ?>
@@ -643,51 +232,94 @@
           <a href="<?= base_url('register'); ?>" class="btn btn-primary">Sign Up</a>
         <?php endif; ?>
 
-        <div class="hamburger" id="hamburger" tabindex="0">
+        <button class="hamburger icon-btn d-md-none" id="hamburger" aria-label="Toggle menu">
           <i class="fas fa-bars"></i>
-        </div>
-
+        </button>
       </div>
     </header>
 
     <main>
       <?php if (session()->getFlashdata('success')): ?>
-        <div style="text-align:center;background:#fffae6;color:#333;padding:10px;border-radius:8px;margin-top:10px;">
+        <div class="flash-alert">
           <?= esc(session()->getFlashdata('success')); ?>
         </div>
       <?php endif; ?>
 
-      <section class="hero">
-        <div class="hero-text">
-          <h1>Temukan Kelezatan Sehari-hari Anak Kampus</h1>
-          <p>Rasakan hidangan favorit mahasiswa dengan cita rasa rumahan yang selalu ngangenin.
-            Dari menu simpel penyelamat tanggal tua hingga pilihan kenyang sebelum kelas, semua dibuat dengan penuh kehangatan dan harga yang tetap bersahabat untuk kantong mahasiswa.</p>
-          <a href="<?= site_url('menu'); ?>" class="btn btn-primary">Explore Menu</a>
-          <button id="orderNowBtn" class="btn btn-secondary"><i class="fas fa-phone"></i> Order Now</button>
-        </div>
+      <section class="hero-section">
+        <div class="hero-content">
+          <div class="hero-copy">
+            <span class="badge rounded-pill px-3 py-2 hero-chip">Startup Food Experience</span>
+            <h1>Temukan Kelezatan Sehari-hari Anak Kampus</h1>
+            <p>Rasakan hidangan favorit mahasiswa dengan cita rasa rumahan yang selalu ngangenin. Dari menu simpel penyelamat tanggal tua hingga pilihan kenyang sebelum kelas, semua dibuat dengan penuh kehangatan dan harga yang tetap bersahabat untuk kantong mahasiswa.</p>
 
-        <div class="hero-image">
-          <img src="<?= base_url('assets/img/13-1765157815.png'); ?>" alt="Gourmet Food Selection" id="heroImage">
+            <div class="hero-actions">
+              <a href="<?= site_url('menu'); ?>" class="btn btn-primary">Explore Menu</a>
+              <button id="orderNowBtn" class="btn btn-secondary"><i class="fas fa-phone"></i> Order Now</button>
+            </div>
+
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <strong>4.9/5</strong>
+                <span>Review pelanggan</span>
+              </div>
+              <div class="hero-stat">
+                <strong>120+</strong>
+                <span>Menu pilihan</span>
+              </div>
+              <div class="hero-stat">
+                <strong>256</strong>
+                <span>Pesanan hari ini</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <img src="<?= base_url('assets/img/13-1765157815.png'); ?>" alt="Gourmet Food Selection">
+          </div>
         </div>
       </section>
 
       <section class="popular-dishes" id="menu">
-        <h2>Menu Terlaris</h2>
+        <div class="section-header">
+          <div>
+            <h2>Menu Terlaris</h2>
+            <p>Pilihan favorit pelanggan yang paling sering dipesan hari ini.</p>
+          </div>
+        </div>
 
-        <div class="dishes">
+        <div class="dishes home-menu-grid">
           <?php foreach ($menus as $m): ?>
-            <div class="dish" data-img="<?= esc($m['image']); ?>">
-              <img src="<?= base_url('assets/img/' . esc($m['image'])); ?>" alt="<?= esc($m['name']); ?>">
-              <h3><?= esc(ucwords($m['name'])); ?></h3>
-              <p><?= esc($m['description']); ?></p>
-              <span class="price">Rp <?= number_format($m['price'], 0, ',', '.'); ?></span>
-              <button class="add-to-cart"
-                data-id="<?= $m['id']; ?>"
-                data-name="<?= esc($m['name']); ?>"
-                data-price="<?= $m['price']; ?>">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
+            <?php
+            $stock = (int)($m['stock'] ?? 0);
+            $stockClass = $stock <= 0 ? 'out' : ($stock <= 5 ? 'low' : 'available');
+            $stockLabel = $stock > 0 ? $stock . ' tersisa' : 'Habis';
+            ?>
+            <article class="menu-card animate-fade" data-img="<?= esc($m['image']); ?>">
+              <div class="thumb">
+                <img src="<?= base_url('assets/img/' . esc($m['image'])); ?>" alt="<?= esc($m['name']); ?>">
+                <span class="badge-popular">Populer</span>
+                <button class="btn-add <?= $stock > 0 ? 'add-to-cart' : 'disabled'; ?>"
+                  data-id="<?= $m['id']; ?>"
+                  data-name="<?= esc($m['name']); ?>"
+                  data-price="<?= $m['price']; ?>"
+                  <?= $stock > 0 ? '' : 'disabled'; ?>
+                  aria-label="<?= $stock > 0 ? 'Tambah ' . esc($m['name']) . ' ke keranjang' : esc($m['name']) . ' habis'; ?>">
+                  <i class="fas <?= $stock > 0 ? 'fa-plus' : 'fa-ban'; ?>"></i>
+                </button>
+              </div>
+              <div class="card-body">
+                <h3><?= esc(ucwords($m['name'])); ?></h3>
+                <p class="desc"><?= esc($m['description'] ?: 'Menu favorit pelanggan untuk dinikmati kapan saja.'); ?></p>
+                <div class="meta">
+                  <span class="category"><i class="fas fa-fire"></i>Terlaris</span>
+                  <span class="rating"><i class="fas fa-star"></i><strong>4.8</strong></span>
+                </div>
+                <div class="price-row">
+                  <span class="price">Rp <?= number_format($m['price'], 0, ',', '.'); ?></span>
+                  <span class="stock-badge <?= esc($stockClass); ?>"><?= esc($stockLabel); ?></span>
+                </div>
+              </div>
+            </article>
           <?php endforeach; ?>
         </div>
       </section>
@@ -700,8 +332,8 @@
       <div>Anda akan dihubungkan ke nomor berikut:</div>
       <div class="phone" id="modalPhone"><?= esc($telDisplay); ?></div>
 
-      <div style="margin-top:10px">
-        <small style="color:#666">Pilih "Ya" untuk melanjutkan panggilan seluler, atau gunakan WhatsApp.</small>
+      <div class="modal-note">
+        Pilih "Ya" untuk melanjutkan panggilan seluler, atau gunakan WhatsApp.
       </div>
 
       <div class="actions">
@@ -715,8 +347,8 @@
   </div>
   <div class="contact-modal-backdrop" id="deliveryModal" aria-hidden="true">
     <div class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="deliveryModalTitle">
-      <h3 id="deliveryModalTitle" style="margin-bottom:4px;">Pilih Metode Pengambilan</h3>
-      <p style="margin:4px 0 14px;color:#6b7280;font-size:0.92rem;">
+      <h3 id="deliveryModalTitle" class="modal-heading">Pilih Metode Pengambilan</h3>
+      <p class="modal-description">
         Silakan pilih apakah pesanan akan diantar ke tempatmu atau kamu ambil sendiri di kantin.
       </p>
 
@@ -745,8 +377,8 @@
   </div>
   <div class="contact-modal-backdrop" id="addressModal" aria-hidden="true">
     <div class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="addressModalTitle">
-      <h3 id="addressModalTitle" style="margin-bottom:4px;">Pilih Ruangan Pengantaran</h3>
-      <p style="margin:4px 0 14px;color:#6b7280;font-size:0.92rem;">
+      <h3 id="addressModalTitle" class="modal-heading">Pilih Ruangan Pengantaran</h3>
+      <p class="modal-description">
         Pilih ruangan / lokasi tempat pesanan akan diantar.
       </p>
 
@@ -774,7 +406,7 @@
         </div>
 
       <?php else: ?>
-        <p style="margin:4px 0 0;color:#ef4444;font-size:0.9rem;">
+        <p class="alert-text">
           Kamu belum menyimpan ruangan/alamat. Silakan atur dulu di profil.
         </p>
         <div class="actions">
@@ -902,22 +534,10 @@
             }));
 
             if (data.ok) {
-              const countEl = document.querySelector('.cart-count');
-
-              if (countEl) {
-                let next;
-                if (typeof data.cart_count !== 'undefined') {
-                  next = parseInt(data.cart_count, 10);
-                } else {
-                  next = parseInt(countEl.textContent || '0', 10);
-                  if (isNaN(next)) next = 0;
-                  next += 1;
-                }
-
-                countEl.textContent = next;
-                if (next > 0) {
-                  countEl.style.display = 'inline-block';
-                }
+              if (typeof window.setCartCount === 'function' && typeof data.cart_count !== 'undefined') {
+                window.setCartCount(data.cart_count);
+              } else if (typeof window.refreshCartCount === 'function') {
+                window.refreshCartCount();
               }
             } else {
               const msg = (data.msg || '').toLowerCase();
@@ -1090,6 +710,13 @@
         const data = await res.json().catch(() => ({
           ok: false
         }));
+        if (data.ok) {
+          if (typeof window.setCartCount === 'function' && typeof data.cart_count !== 'undefined') {
+            window.setCartCount(data.cart_count);
+          } else if (typeof window.refreshCartCount === 'function') {
+            window.refreshCartCount();
+          }
+        }
         alert(data.ok ? 'Ditambahkan ke keranjang' : (data.msg || 'Gagal menambah'));
       });
     }

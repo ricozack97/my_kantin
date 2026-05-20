@@ -201,10 +201,19 @@ class Cart extends BaseController
 
             $db->transCommit();
 
+            $countRow = $db->table('order_items oi')
+                ->select('COALESCE(SUM(oi.qty), 0) AS count', false)
+                ->join('orders o', 'o.id = oi.order_id')
+                ->where('o.user_id', (int) $u['id'])
+                ->whereIn('o.status', ['pending', 'menunggu'])
+                ->get()
+                ->getRowArray();
+
             return $this->response->setJSON([
-                'ok'       => true,
-                'msg'      => 'Pesanan berhasil dibuat / ditambahkan.',
-                'redirect' => site_url('p/orders'),
+                'ok'         => true,
+                'msg'        => 'Pesanan berhasil dibuat / ditambahkan.',
+                'redirect'   => site_url('p/orders'),
+                'cart_count' => (int)($countRow['count'] ?? 0),
             ]);
         } catch (\Throwable $e) {
             $db->transRollback();
@@ -259,8 +268,21 @@ class Cart extends BaseController
 
     public function count()
     {
-        $cart = session('cart') ?? [];
-        $count = array_sum(array_column($cart, 'qty'));
+        $u = session('user');
+        if (!$u) {
+            return $this->response->setJSON(['count' => 0]);
+        }
+
+        $row = db_connect()
+            ->table('order_items oi')
+            ->select('COALESCE(SUM(oi.qty), 0) AS count', false)
+            ->join('orders o', 'o.id = oi.order_id')
+            ->where('o.user_id', (int) $u['id'])
+            ->whereIn('o.status', ['pending', 'menunggu'])
+            ->get()
+            ->getRowArray();
+
+        $count = (int)($row['count'] ?? 0);
         return $this->response->setJSON(['count' => $count]);
     }
 
