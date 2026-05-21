@@ -40,41 +40,38 @@ class Payment extends BaseController
                 ->with('error', 'Pesanan ini sudah dibayar.');
         }
 
-        // ==== Konfigurasi Midtrans ====
-        \Midtrans\Config::$serverKey    = getenv('MIDTRANS_SERVER_KEY');
-        \Midtrans\Config::$isProduction = getenv('MIDTRANS_IS_PRODUCTION') === 'true';
-        \Midtrans\Config::$isSanitized  = true;
-        \Midtrans\Config::$is3ds        = true;
+        return view('payment/qris', [
+            'order' => $order,
+        ]);
+    }
 
-        $transactionDetails = [
-            'order_id'     => $order['code'],                 // gunakan kode order kamu
-            'gross_amount' => (int) $order['total_amount'],   // total bayar
-        ];
+    public function confirm($id)
+    {
+        $u = $this->userOrRedirect();
+        if ($u instanceof \CodeIgniter\HTTP\RedirectResponse) return $u;
 
-        $customer = $u;
-        $customerDetails = [
-            'first_name' => $customer['name']  ?? 'Customer',
-            'email'      => $customer['email'] ?? null,
-            'phone'      => $customer['phone'] ?? null,
-        ];
+        $orderId = (int) $id;
+        $order   = (new OrderModel())->getOneWithItems($orderId, (int)$u['id']);
 
-        $params = [
-            'transaction_details' => $transactionDetails,
-            'customer_details'    => $customerDetails,
-        ];
-
-        try {
-            $snapToken = \Midtrans\Snap::getSnapToken($params);
-        } catch (\Throwable $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal membuat transaksi Midtrans: '.$e->getMessage());
+        if (!$order) {
+            return redirect()->to(site_url('p/orders'))
+                ->with('error', 'Pesanan tidak ditemukan.');
         }
 
-        return view('buyer/payment_snap', [
-            'order'     => $order,
-            'snapToken' => $snapToken,
-            'clientKey' => getenv('MIDTRANS_CLIENT_KEY'),
+        if (($order['payment_status'] ?? 'unpaid') === 'paid') {
+            return redirect()->to(site_url('p/orders/'.$orderId))
+                ->with('success', 'Pesanan sudah dibayar.');
+        }
+
+        $orderModel = new OrderModel();
+        $orderModel->update($orderId, [
+            'payment_status' => 'paid',
+            'payment_method' => 'qris',
+            'payment_type' => 'qris',
         ]);
+
+        return redirect()->to(site_url('p/orders/'.$orderId))
+            ->with('success', 'Status pembayaran berhasil diubah menjadi Sudah Dibayar.');
     }
 
     // === Endpoint notifikasi dari Midtrans ===

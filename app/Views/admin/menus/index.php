@@ -4,32 +4,93 @@ include APPPATH . 'Views/admin/partials/head.php';
 ?>
 
 <style>
+  /* theme variables moved to admin partial head.php */
   .img-thumb {
-    width: 56px;
-    height: 56px;
+    width: 72px;
+    height: 72px;
     object-fit: cover;
-    border-radius: .35rem;
-    border: 1px solid #e3e6f0;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
   }
 
-  .pagination li {
-    display: inline-block;
-    margin: 0 3px;
+  /* Card and header */
+  .card {
+    border-radius: 16px;
+    border: none;
+    background: var(--card);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+  }
+  .card-header {
+    background: transparent;
+    border-bottom: none;
+    padding: 18px 24px;
+  }
+  .card-header h6 {
+    color: var(--primary);
+    font-weight:700;
+    margin:0;
   }
 
-  .pagination li a,
-  .pagination li span {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    background: #fff;
-    color: #555;
+  /* Table style */
+  .table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
+  .table thead th {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-weight:600;
+    padding: 12px 18px;
+  }
+  .table tbody tr {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+  }
+  .table td {
+    vertical-align: middle;
+    border: none !important;
+    padding: 14px 18px;
   }
 
-  .pagination li.active span {
-    background: #ff4766;
-    color: #fff;
-    border-color: #ff4766;
+  /* Badges */
+  .table .badge {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight:600;
+  }
+  .badge-success { background:#1b7a2e; color:#fff; }
+  .badge-warning { background:#ffb020; color:#fff; }
+  .badge-secondary { background:#e9ecef; color:#4a4a57; }
+  .badge-light { background:#f7f7fb; color:#6b6b75; border:1px solid rgba(0,0,0,0.03); }
+
+  /* Buttons consistent with theme */
+  .btn-primary, .btn.btn-sm.btn-primary {
+    background: var(--primary) !important;
+    border-color: var(--primary) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 20px rgba(255,71,102,0.12);
+  }
+  .btn-edit { background: #2b8cff; color:#fff; border:none; }
+  .btn-delete { background: #ff5566; color:#fff; border:none; }
+  .btn-edit, .btn-delete { padding:6px 10px; border-radius:8px; font-weight:600; }
+
+  /* Pagination */
+  .pagination li { display:inline-block; margin:0 4px; }
+  .pagination li a, .pagination li span {
+    padding:8px 12px; border-radius:8px; border:1px solid transparent; background:#fff; color:#555;
+  }
+  .pagination li.active span { background: var(--primary); color:#fff; border-color:var(--primary); }
+  /* Button text visibility for small screens */
+  .btn-text { margin-left:8px; display:inline-block; }
+  @media (max-width:576px) {
+    .img-thumb { width:48px; height:48px; }
+    .table thead th { font-size:0.86rem; }
+    .btn-text { display:none; }
+    .table td { padding:10px 12px; }
+    .card { padding:12px; }
   }
 </style>
 
@@ -103,23 +164,23 @@ include APPPATH . 'Views/admin/partials/head.php';
 
               <td>
                 <?php if ($m['is_active']): ?>
-                  <span class="badge badge-success">Ya</span>
+                  <span class="badge badge-success"><i class="fas fa-check-circle"></i> <span class="badge-text">Ya</span></span>
                 <?php else: ?>
-                  <span class="badge badge-secondary">Tidak</span>
+                  <span class="badge badge-secondary"><i class="fas fa-times-circle"></i> <span class="badge-text">Tidak</span></span>
                 <?php endif; ?>
               </td>
 
               <td>
                 <?php if (!empty($m['is_popular'])): ?>
-                  <span class="badge badge-warning">Ya</span>
+                  <span class="badge badge-warning"><i class="fas fa-star"></i> <span class="badge-text">Ya</span></span>
                 <?php else: ?>
-                  <span class="badge badge-light">Tidak</span>
+                  <span class="badge badge-light"><i class="far fa-star"></i> <span class="badge-text">Tidak</span></span>
                 <?php endif; ?>
               </td>
 
               <td class="text-nowrap">
-                <a class="btn btn-sm btn-info" href="<?= base_url('admin/menus/' . $m['id'] . '/edit'); ?>">
-                  <i class="fas fa-pen"></i> Edit
+                <a class="btn btn-sm btn-edit" href="<?= base_url('admin/menus/' . $m['id'] . '/edit'); ?>" title="Edit">
+                  <i class="fas fa-pen"></i><span class="btn-text">Edit</span>
                 </a>
 
                 <form action="<?= base_url('admin/menus/' . $m['id'] . '/delete'); ?>"
@@ -127,8 +188,8 @@ include APPPATH . 'Views/admin/partials/head.php';
                   style="display:inline"
                   onsubmit="return confirm('Hapus menu ini?')">
                   <?= csrf_field(); ?>
-                  <button type="submit" class="btn btn-sm btn-danger">
-                    <i class="fas fa-trash"></i> Hapus
+                  <button type="submit" class="btn btn-sm btn-delete" title="Hapus">
+                    <i class="fas fa-trash"></i><span class="btn-text">Hapus</span>
                   </button>
                 </form>
               </td>

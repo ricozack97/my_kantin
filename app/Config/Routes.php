@@ -14,6 +14,7 @@ $routes->get('menu', 'Home::menu');
 $routes->get('menu/json', 'Home::menuJson');
 $routes->get('menu/search', 'Menu::search');
 $routes->get('about', 'Home::about');
+$routes->get('contact', 'Home::contact');
 
 // ==========================
 // AUTH (GUEST ONLY)
@@ -60,6 +61,7 @@ $routes->group('p', ['filter' => 'verified'], function ($routes) {
     $routes->post('orders/(:num)/delete', 'Buyer\Orders::delete/$1');
 
     $routes->get('payment/(:num)', 'Buyer\Payment::pay/$1');
+    $routes->post('payment/(:num)/confirm', 'Buyer\Payment::confirm/$1');
     $routes->post('payment/notification', 'Buyer\Payment::notification');
 });
 

@@ -45,8 +45,6 @@ class Orders extends BaseController
             return $check;
         $user = $check;
 
-        $this->autoUpdatePendingToProcessing();
-
         $orders = (new OrderModel())->getByUserWithAddress((int) $user['id']);
 
         return view('orders/index', [
@@ -61,8 +59,6 @@ class Orders extends BaseController
         if ($check instanceof \CodeIgniter\HTTP\RedirectResponse)
             return $check;
         $user = $check;
-
-        $this->autoUpdatePendingToProcessing();
 
         $orderModel = new OrderModel();
         $paymentModel = new PaymentModel();

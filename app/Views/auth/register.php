@@ -1,201 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= $this->extend('layouts/main'); ?>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - Kantin G'penk</title>
-  <link rel="stylesheet" href="<?= base_url('assets/css/style.css'); ?>">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<?= $this->section('content'); ?>
 
-  <style>
-    :root {
-      --bg-page: #fdeff0;
-      --card-bg: #ffffff;
-      --text-dark: #0b2130;
-      --muted: #6b7280;
-      --accent: #ff4766;
-      --accent-dark: #e03f5d;
-      --field-border: #e6d6d8;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: var(--bg-page);
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-dark);
-      margin: 0;
-    }
-
-    .auth-card {
-      background: var(--card-bg);
-      border-radius: 15px;
-      box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
-      width: 400px;
-      padding: 2rem 2.5rem;
-      text-align: center;
-    }
-
-    .auth-card h2 {
-      margin-bottom: 1.5rem;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    form {
-      text-align: left;
-    }
-
-    label {
-      display: block;
-      margin-bottom: .3rem;
-      font-weight: 500;
-      color: var(--text-dark);
-    }
-
-    input {
-      width: 100%;
-      padding: .6rem .8rem;
-      margin-bottom: 1rem;
-      border: 1px solid var(--field-border);
-      border-radius: 8px;
-      font-size: 14px;
-      background: #fff;
-      color: var(--text-dark);
-    }
-
-    button {
-      width: 100%;
-      background: var(--accent);
-      border: none;
-      color: #fff;
-      font-size: 1rem;
-      padding: .7rem 0;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background .25s;
-      font-weight: 600;
-    }
-
-    button:hover {
-      background: var(--accent-dark);
-    }
-
-    p {
-      margin-top: 1rem;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .register-success-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.0);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      animation: successBackdrop .35s ease forwards;
-    }
-
-    .register-success-card {
-      background: #fff;
-      border-radius: 24px;
-      padding: 32px 40px;
-      max-width: 420px;
-      width: 90%;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-      opacity: 0;
-      transform: translateY(30px) scale(0.96);
-      animation: successPopup .45s ease forwards .1s;
-    }
-
-    .register-success-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 3px solid #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      color: #22c55e;
-      font-size: 30px;
-    }
-
-    .register-success-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #ff4766;
-      margin-bottom: 12px;
-    }
-
-    .register-success-msg {
-      background: #dcfce7;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 0.96rem;
-      color: #166534;
-      margin-bottom: 20px;
-    }
-
-    .register-success-btn {
-      display: inline-block;
-      padding: 10px 22px;
-      border-radius: 999px;
-      background: #ff4766;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-    }
-
-    .register-success-btn:hover {
-      background: #e03f5d;
-    }
-
-    @keyframes successBackdrop {
-      from {
-        background: rgba(0, 0, 0, 0);
-      }
-
-      to {
-        background: rgba(0, 0, 0, 0.25);
-      }
-    }
-
-    @keyframes successPopup {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.96);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-  </style>
-
-</head>
-
-<body>
+<div class="login-wrapper">
   <div class="auth-card">
     <h2>Daftar Akun</h2>
 
@@ -209,11 +16,16 @@
       <p style="color:red;"><?= esc(session('error')); ?></p>
     <?php endif; ?>
 
-    <form method="post" action="<?= base_url('register/save'); ?>">
+    <form method="post" action="<?= base_url('register/save'); ?>" id="registerForm">
       <?= csrf_field(); ?>
 
       <label>Nama Lengkap</label>
-      <input type="text" name="name" required placeholder="Masukkan Nama Anda" value="<?= old('name'); ?>">
+      <input
+        type="text"
+        name="name"
+        required
+        placeholder="Masukkan Nama Anda"
+        value="<?= old('name'); ?>">
 
       <label for="no_hp">Nomor HP</label>
       <input
@@ -228,60 +40,286 @@
         value="<?= old('no_hp'); ?>">
 
       <label>Password</label>
-      <input type="password" name="password" required placeholder="Password">
+      <div class="password-wrapper">
+        <input
+          type="password"
+          name="password"
+          id="password"
+          required
+          placeholder="Password">
+
+        <span class="toggle-password" onclick="togglePassword('password', this)">
+          <i class="fas fa-eye"></i>
+        </span>
+      </div>
 
       <label>Konfirmasi Password</label>
-      <input type="password" name="password_confirm" required placeholder="Konfirmasi Password">
+      <div class="password-wrapper">
+        <input
+          type="password"
+          name="password_confirm"
+          id="password_confirm"
+          required
+          placeholder="Konfirmasi Password">
+
+        <span class="toggle-password" onclick="togglePassword('password_confirm', this)">
+          <i class="fas fa-eye"></i>
+        </span>
+      </div>
 
       <button type="submit">Daftar</button>
     </form>
 
-    <p>Sudah punya akun? <a href="<?= base_url('login'); ?>">Sign In di sini</a></p>
+    <p>
+      Sudah punya akun?
+      <a href="<?= base_url('login'); ?>">Sign In di sini</a>
+    </p>
   </div>
-  <?php if ($data = session()->getFlashdata('verify_popup')): ?>
-    <div class="register-success-overlay">
-      <div class="register-success-card">
-        <div class="register-success-title">Verifikasi WhatsApp</div>
+</div>
 
-        <p>Silakan klik tombol di bawah untuk verifikasi akun Anda.</p>
+<style>
+  body {
+    background: linear-gradient(180deg, #f8fafc 0%, #fdeff0 100%);
+    margin: 0;
+    padding: 0;
+  }
 
-        <?php
-        $adminWa = '6285707559188'; // NOMOR ADMIN
-        $msg = urlencode(
-          "Halo Admin,\n"
-            . "Saya ingin verifikasi akun Kantin G'penk\n\n"
-            . "Nama: {$data['name']}\n"
-            . "No HP: {$data['no_hp']}"
-        );
-        ?>
+  .login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+  }
 
-        <a href="https://wa.me/<?= $adminWa ?>?text=<?= $msg ?>"
-          target="_blank"
-          class="register-success-btn"
-          onclick="setTimeout(() => window.location.href='<?= site_url('login') ?>', 2000)">
-          📲 Verifikasi via WhatsApp
-        </a>
+  .auth-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.08);
+    width: 400px;
+    padding: 2rem 2.5rem;
+    text-align: center;
+  }
 
-        <small style="display:block;margin-top:10px;color:#666">
-          Setelah mengirim pesan, silakan login.
-        </small>
+  .auth-card h2 {
+    margin-bottom: 1.5rem;
+    color: #ff4766;
+    font-weight: 700;
+  }
+
+  .auth-card form {
+    text-align: left;
+  }
+
+  .auth-card label {
+    display: block;
+    margin-bottom: .3rem;
+    font-weight: 500;
+    color: #0b2130;
+  }
+
+  .auth-card input {
+    width: 100%;
+    padding: .6rem .8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e6d6d8;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f3f6fa;
+    color: #0b2130;
+    box-sizing: border-box;
+  }
+
+  .auth-card button {
+    width: 100%;
+    background: #ff4766;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    padding: .7rem 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .25s;
+    font-weight: 600;
+  }
+
+  .auth-card button:hover {
+    background: #e03f5d;
+  }
+
+  .auth-card p {
+    margin-top: 1rem;
+    font-size: 14px;
+    color: #6b7280;
+  }
+
+  .auth-card a {
+    color: #ff4766;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .auth-card a:hover {
+    text-decoration: underline;
+  }
+
+  /* PASSWORD */
+
+  .password-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  .password-wrapper input {
+    padding-right: 45px;
+    margin-bottom: 0;
+  }
+
+  .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toggle-password:hover {
+    color: #ff4766;
+  }
+
+  /* SUCCESS POPUP */
+
+  .register-success-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .register-success-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px 40px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    animation: successPopup .35s ease;
+  }
+
+  .register-success-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ff4766;
+    margin-bottom: 12px;
+  }
+
+  .register-success-btn {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: #ff4766;
+    color: #fff !important;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+
+  .register-success-btn:hover {
+    background: #e03f5d;
+    text-decoration: none;
+  }
+
+  @keyframes successPopup {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>
+
+<?php if ($data = session()->getFlashdata('verify_popup')): ?>
+  <div class="register-success-overlay">
+    <div class="register-success-card">
+
+      <div class="register-success-title">
+        Verifikasi WhatsApp
       </div>
+
+      <p>
+        Silakan klik tombol di bawah untuk verifikasi akun Anda.
+      </p>
+
+      <?php
+      $adminWa = '6285707559188';
+
+      $msg = urlencode(
+        "Halo Admin,\n"
+          . "Saya ingin verifikasi akun Kantin G'penk\n\n"
+          . "Nama: {$data['name']}\n"
+          . "No HP: {$data['no_hp']}"
+      );
+      ?>
+
+      <a
+        href="https://wa.me/<?= $adminWa ?>?text=<?= $msg ?>"
+        target="_blank"
+        class="register-success-btn"
+        onclick="setTimeout(() => window.location.href='<?= site_url('login') ?>', 2000)">
+        📲 Verifikasi via WhatsApp
+      </a>
+
+      <small style="display:block;margin-top:10px;color:#666">
+        Setelah mengirim pesan, silakan login.
+      </small>
     </div>
-  <?php endif; ?>
-  <script>
-    document.getElementById('no_hp')?.addEventListener('input', function() {
-      this.value = (this.value || '').replace(/\D/g, '').slice(0, 13);
-    });
+  </div>
+<?php endif; ?>
 
-    document.getElementById('registerForm')?.addEventListener('submit', function(e) {
-      const phone = document.getElementById('no_hp').value.trim();
-      if (!/^08\d{10,11}$/.test(phone)) {
-        e.preventDefault();
-        alert('Nomor HP harus diawali 08 dan terdiri dari 12 atau 13 angka.');
-      }
-    });
-  </script>
+<script>
+  document.getElementById('no_hp')?.addEventListener('input', function() {
+    this.value = (this.value || '')
+      .replace(/\D/g, '')
+      .slice(0, 13);
+  });
 
-</body>
+  document.getElementById('registerForm')?.addEventListener('submit', function(e) {
+    const phone = document.getElementById('no_hp').value.trim();
 
-</html>
+    if (!/^08\d{10,11}$/.test(phone)) {
+      e.preventDefault();
+      alert('Nomor HP harus diawali 08 dan terdiri dari 12 atau 13 angka.');
+    }
+  });
+
+  function togglePassword(id, el) {
+    const input = document.getElementById(id);
+    const icon = el.querySelector('i');
+
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = 'password';
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+</script>
+
+<?= $this->endSection(); ?>

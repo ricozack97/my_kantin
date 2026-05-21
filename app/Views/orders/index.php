@@ -11,29 +11,15 @@
 
   <style>
     :root {
-      --bg-page: #fdeff0;
-      --card-bg: #ffffff;
-      --text-dark: #0b2130;
-      --muted: #6b7280;
-      --accent: #ff4766;
-      --accent-dark: #e03f5d;
-
-      --pending-bg: #fff3d6;
-      --pending-text: #a26a00;
-
-      --paid-bg: #e8ffe8;
-      --paid-text: #1b7a2e;
-
-      --cancel-bg: #ffe5e7;
-      --cancel-text: #b21d1d;
-
-      --flash-success-bg: #e8fce9;
-      --flash-success-border: #c0f0c6;
-      --flash-success-text: #1f7d1f;
-
-      --flash-error-bg: #ffeaea;
-      --flash-error-border: #f3c3c3;
-      --flash-error-text: #842323;
+      --orders-bg: #f8fafc;
+      --orders-surface: #ffffff;
+      --orders-soft: #fff1f4;
+      --orders-text: #172033;
+      --orders-muted: #667085;
+      --orders-border: #e7ecf4;
+      --orders-primary: #ff4766;
+      --orders-accent: #ffb703;
+      --orders-shadow: 0 24px 70px rgba(31, 44, 71, 0.1);
     }
 
     html,
@@ -45,313 +31,383 @@
     }
 
     body {
-      background: var(--bg-page) fixed center/cover;
+      background: radial-gradient(circle at top left, rgba(255, 71, 102, 0.08), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, var(--orders-bg) 46%, #ffffff 100%);
       min-height: 100vh;
       font-family: 'Poppins', sans-serif;
-      color: var(--text-dark);
+      color: var(--orders-text);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       margin: 0;
     }
 
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 50px;
-      background: var(--bg-page);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-      z-index: 999;
-    }
-
-    header .logo {
-      font-weight: 700;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    header .logo i {
-      color: var(--accent);
-    }
-
-    header nav ul {
-      list-style: none;
-      display: flex;
-      gap: 18px;
-      margin: 0;
-      padding: 0;
-      align-items: center;
-    }
-
-    header nav a {
-      text-decoration: none;
-      color: var(--text-dark);
-      font-weight: 500;
-      padding-bottom: 4px;
-      border-bottom: 2px solid transparent;
-      transition: color .2s, border-color .2s;
-    }
-
-    header nav a:hover {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
-    }
-
-    header nav a.active {
-      color: var(--text-dark);
-      border-bottom: none;
-    }
-
     .container {
-      max-width: 1100px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 120px 16px 28px;
+      padding: 126px 18px 48px;
       box-sizing: border-box;
     }
 
     .page-head {
-      margin: 8px 0 18px;
-      text-align: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 18px;
+      margin: 16px 0 24px;
+      padding: 28px;
+      border: 1px solid var(--orders-border);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: var(--orders-shadow);
+      backdrop-filter: blur(16px);
     }
 
     .page-head h2 {
-      color: var(--accent);
-      font-weight: 700;
+      color: var(--orders-text);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.03;
+      letter-spacing: -0.04em;
+      font-weight: 800;
       margin: 0;
+    }
+
+    .page-head p {
+      max-width: 58ch;
+      margin: 12px 0 0;
+      color: var(--orders-muted);
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .page-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin-bottom: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 71, 102, 0.12);
+      color: var(--orders-primary);
+      font-weight: 800;
+      font-size: 0.88rem;
+    }
+
+    .page-summary {
+      min-width: 190px;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--orders-primary), var(--orders-accent));
+      color: #fff;
+      box-shadow: 0 20px 44px rgba(255, 71, 102, 0.2);
+    }
+
+    .page-summary span {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .page-summary strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 2rem;
+      line-height: 1;
     }
 
     .orders {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
     }
 
     .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, .06);
-      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      background: var(--orders-surface);
+      border: 1px solid var(--orders-border);
+      border-radius: 24px;
+      box-shadow: 0 18px 46px rgba(31, 44, 71, 0.08);
+      padding: 22px;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 28px 68px rgba(31, 44, 71, 0.12);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto;
+      height: 5px;
+      background: linear-gradient(135deg, var(--orders-primary), var(--orders-accent));
     }
 
     .card h3 {
-      color: var(--text-dark);
-      font-weight: 700;
-      margin: 0 0 8px 0;
+      color: var(--orders-text);
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .order-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--orders-border);
     }
 
     .meta {
-      color: var(--muted);
-      font-size: .9rem;
-      margin: 6px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--orders-muted);
+      font-size: .92rem;
+      margin: 0;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(231, 236, 244, 0.75);
+    }
+
+    .meta:last-of-type {
+      border-bottom: 0;
+    }
+
+    .meta .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      color: var(--orders-muted);
+      font-weight: 600;
+    }
+
+    .meta b,
+    .meta .value {
+      color: #273246;
+      font-weight: 800;
+      text-align: right;
+      overflow-wrap: anywhere;
     }
 
     .badge {
-      display: inline-block;
-      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 7px 12px;
       border-radius: 999px;
       font-size: .8rem;
-      font-weight: 600;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
     .badge.pending {
-      background: var(--pending-bg);
-      color: var(--pending-text);
+      background: #fff4d4;
+      color: #a46400;
     }
 
     .badge.paid {
-      background: var(--paid-bg);
-      color: var(--paid-text);
+      background: #dcfce7;
+      color: #128454;
     }
 
     .badge.cancel {
-      background: var(--cancel-bg);
-      color: var(--cancel-text);
+      background: #ffe4e6;
+      color: #d12b3f;
     }
 
     .btn-link {
-      display: inline-block;
-      margin-top: 8px;
-      background: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 46px;
+      margin-top: 18px;
+      background: linear-gradient(135deg, var(--orders-primary), var(--orders-accent));
       color: #fff;
-      padding: 10px 14px;
-      border-radius: 10px;
+      padding: 10px 16px;
+      border-radius: 14px;
       text-decoration: none;
-      font-weight: 600;
-      transition: background .25s;
+      font-weight: 800;
+      box-shadow: 0 18px 34px rgba(255, 71, 102, 0.18);
+      transition: transform .22s ease, box-shadow .22s ease;
     }
 
     .btn-link:hover {
-      background: var(--accent-dark);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 22px 42px rgba(255, 71, 102, 0.24);
     }
 
     .empty {
-      padding: 24px;
+      padding: 42px 24px;
       text-align: center;
-      color: var(--muted);
+      color: var(--orders-muted);
       background: #fff;
-      border-radius: 16px;
+      border: 1px solid var(--orders-border);
+      border-radius: 24px;
       font-size: 1rem;
+      box-shadow: var(--orders-shadow);
     }
 
     .empty a {
-      color: var(--accent);
+      color: var(--orders-primary);
       font-weight: 700;
       text-decoration: none;
     }
 
     .flash {
-      max-width: 900px;
-      margin: 10px auto;
+      grid-column: 1 / -1;
+      margin-top: 14px;
       padding: 12px 16px;
-      border-radius: 10px;
-      font-weight: 600;
+      border-radius: 14px;
+      font-weight: 700;
     }
 
     .flash.success {
-      background: var(--flash-success-bg);
-      color: var(--flash-success-text);
-      border: 1px solid var(--flash-success-border);
+      background: #dcfce7;
+      color: #128454;
+      border: 1px solid #bbf7d0;
     }
 
     .flash.error {
-      background: var(--flash-error-bg);
-      color: var(--flash-error-text);
-      border: 1px solid var(--flash-error-border);
+      background: #ffe4e6;
+      color: #d12b3f;
+      border: 1px solid #fecdd3;
+    }
+
+    @media (max-width: 1100px) {
+      .orders {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 720px) {
-      header {
-        padding: 14px 20px;
-      }
-
       .container {
-        padding-top: 100px;
+        padding: 100px 14px 32px;
       }
 
-      .orders {
-        gap: 12px;
+      .page-head {
         grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 768px) {
-      nav {
-        position: fixed;
-        top: 64px;
-        right: 12px;
-        background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, .15);
-        width: 200px;
-        display: none;
-        z-index: 9999;
+        padding: 22px;
       }
 
-      nav.active {
-        display: block;
+      .page-summary {
+        min-width: 0;
       }
 
-      nav ul {
-        flex-direction: column;
-        padding: 10px;
-        gap: 8px;
-      }
-
-      nav ul li a {
-        display: block;
-        padding: 10px 12px;
-        border-radius: 10px;
-      }
-
-      .hamburger {
-        display: block;
-        font-size: 22px;
-        cursor: pointer;
-      }
-    }
-
-    @media (max-width: 720px) {
       .orders {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: 1fr;
+        gap: 14px;
       }
 
       .card {
-        padding: 14px;
-      }
-
-      .card h3 {
-        font-size: 0.95rem;
+        padding: 18px;
       }
 
       .meta {
-        font-size: 0.85rem;
+        display: grid;
+        gap: 4px;
       }
 
-      .btn-link {
-        padding: 8px 10px;
-        font-size: 0.85rem;
+      .meta b,
+      .meta .value {
+        text-align: left;
+      }
+
+      .order-top {
+        display: grid;
+      }
+
+      .order-top .badge {
+        width: fit-content;
       }
     }
 
     @media (max-width: 768px) {
-      header nav ul {
-        padding: 12px;
-        gap: 6px;
+      header nav {
+        display: none;
       }
 
-      header nav ul li {
+      header nav.active {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        right: 1rem;
+        left: 1rem;
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 1rem;
+        box-shadow: 0 24px 60px rgba(15, 23, 42, 0.15);
+      }
+
+      header nav.active .nav-links {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      header nav.active .nav-links a {
+        width: 100%;
         text-align: center;
       }
 
-      header nav ul li a {
-        display: inline-block;
-        padding: 10px 16px;
-        border-radius: 999px;
-        font-weight: 600;
-        transition: all .2s ease;
-      }
-
-      header nav ul li a:hover {
-        background: #fff5f7;
-      }
-
-      header nav ul li a.active {
-        background: #ffe4ea;
-        color: var(--accent);
+      .hamburger {
+        display: inline-grid;
       }
     }
   </style>
 
 </head>
 
-<body>
+<body class="orders-page">
 
-  <header>
-    <div class="logo">
-      <i class="fas fa-utensils"></i> Kantin G'penk
+  <header class="page-header">
+    <div class="header-brand">
+      <div class="brand-icon"><i class="fas fa-utensils"></i></div>
+      <div>
+        <span class="brand-title">Kantin G'penk</span>
+        <span class="brand-subtitle">Pesan makanan & minuman modern</span>
+      </div>
     </div>
-    <nav>
-      <ul>
-        <li><a href="<?= site_url('/'); ?>">Home</a></li>
-        <li><a href="<?= site_url('menu'); ?>">Menu</a></li>
-        <li><a href="<?= site_url('about'); ?>">About Us</a></li>
-      </ul>
-    </nav>
-    <div class="hamburger">
-      <i class="fas fa-bars"></i>
+
+    <div class="header-actions">
+      <div class="header-nav">
+        <nav aria-label="Primary navigation">
+          <ul class="nav-links">
+            <li><a href="<?= site_url('/'); ?>">Home</a></li>
+            <li><a href="<?= site_url('menu'); ?>">Menu</a></li>
+            <li><a href="<?= site_url('about'); ?>">About</a></li>
+            <li><a href="<?= site_url('contact'); ?>">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <button class="hamburger icon-btn d-md-none" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </header>
 
   <div class="container">
     <div class="page-head">
-      <h2>Pesanan Saya</h2>
+      <div>
+        <span class="page-badge"><i class="fas fa-receipt"></i> Riwayat pesanan</span>
+        <h2>Pesanan Saya</h2>
+        <p>Pantau status pesanan, metode pengambilan, dan detail transaksi makanan favorit kamu.</p>
+      </div>
+      <div class="page-summary">
+        <span>Total Pesanan</span>
+        <strong><?= number_format(count($orders ?? []), 0, ',', '.'); ?></strong>
+      </div>
 
       <?php if ($msg = session()->getFlashdata('success')): ?>
         <div class="flash success"><?= esc($msg); ?></div>
@@ -403,21 +459,30 @@
             : 'Ambil Sendiri';
           ?>
           <div class="card">
-            <h3>#<?= esc($o['code'] ?? $o['id']); ?></h3>
-            <div class="meta">
-              Tanggal:
-              <?= date('d M Y H:i', strtotime($o['created_at'] ?? 'now')); ?>
+            <div class="order-top">
+              <h3>#<?= esc($o['code'] ?? $o['id']); ?></h3>
+              <span
+                class="badge <?= $cls; ?> order-status-badge"
+                data-order-id="<?= (int)$o['id']; ?>"
+                data-status="<?= esc($status); ?>"
+                data-check-url="<?= site_url('p/orders/' . $o['id'] . '/check'); ?>">
+                <?= esc($label); ?>
+              </span>
             </div>
             <div class="meta">
-              Nama:
+              <span class="label"><i class="fas fa-calendar-alt"></i> Tanggal</span>
+              <span class="value"><?= date('d M Y H:i', strtotime($o['created_at'] ?? 'now')); ?></span>
+            </div>
+            <div class="meta">
+              <span class="label"><i class="fas fa-user"></i> Nama</span>
               <b><?= esc($o['customer_name'] ?? ($user['name'] ?? '-')); ?></b>
             </div>
             <div class="meta">
-              Total:
+              <span class="label"><i class="fas fa-wallet"></i> Total</span>
               <b>Rp <?= number_format((int)($o['total_amount'] ?? 0), 0, ',', '.'); ?></b>
             </div>
             <div class="meta">
-              Metode:
+              <span class="label"><i class="fas fa-bag-shopping"></i> Metode</span>
               <b><?= esc($deliveryText); ?></b>
             </div>
             <?php if ($deliveryRaw === 'delivery'): ?>
@@ -429,27 +494,20 @@
               ?>
               <?php if ($loc !== ''): ?>
                 <div class="meta">
-                  Lokasi: <b><?= esc($loc); ?></b>
+                  <span class="label"><i class="fas fa-location-dot"></i> Lokasi</span>
+                  <b><?= esc($loc); ?></b>
                 </div>
               <?php endif; ?>
 
               <?php if (!empty($o['address_note'])): ?>
-                <div class="meta" style="font-size: .85rem; color:#666;">
-                  Catatan: <?= esc($o['address_note']); ?>
+                <div class="meta">
+                  <span class="label"><i class="fas fa-note-sticky"></i> Catatan</span>
+                  <span class="value"><?= esc($o['address_note']); ?></span>
                 </div>
               <?php endif; ?>
             <?php endif; ?>
-            <div class="meta">
-              Status:
-              <span
-                class="badge <?= $cls; ?> order-status-badge"
-                data-order-id="<?= (int)$o['id']; ?>"
-                data-status="<?= esc($status); ?>"
-                data-check-url="<?= site_url('p/orders/' . $o['id'] . '/check'); ?>">
-                <?= esc($label); ?>
-              </span>
-            </div>
             <a class="btn-link" href="<?= site_url('p/orders/' . $o['id']); ?>">
+              <i class="fas fa-eye"></i>
               Lihat Detail
             </a>
           </div>
@@ -482,27 +540,8 @@
         }, 220);
       }
 
-      function pollAll() {
-        badges.forEach(badge => {
-          const url = badge.dataset.checkUrl;
-          if (!url) return;
-
-          fetch(url, {
-              headers: {
-                'Accept': 'application/json'
-              }
-            })
-            .then(res => res.ok ? res.json() : null)
-            .then(data => {
-              if (!data || !data.ok) return;
-              updateBadge(badge, data);
-            })
-            .catch(() => {});
-        });
-      }
-
-      pollAll();
-      setInterval(pollAll, 30000);
+      // Realtime status polling disabled - admin control only
+      // pollAll() dan setInterval dihapus agar hanya admin yang bisa ubah status
     })();
   </script>
   <script>

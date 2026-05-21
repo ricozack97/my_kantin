@@ -6,18 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Detail Pesanan - Kantin G'penk</title>
   <link rel="stylesheet" href="<?= base_url('assets/css/style.css'); ?>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-page: #fdeff0;
-      --card-bg: #ffffff;
-      --text-dark: #0b2130;
-      --muted: #6b7280;
-      --accent: #ff4766;
-      --accent-dark: #e03f5d;
-      --shadow: rgba(10, 25, 40, 0.06);
-      --table-border: #f3f2f4;
-      --danger: #ff4d4f;
-      --ghost-border: #eee;
+      --detail-bg: #f8fafc;
+      --detail-surface: #ffffff;
+      --detail-text: #172033;
+      --detail-muted: #667085;
+      --detail-border: #e7ecf4;
+      --detail-primary: #ff4766;
+      --detail-accent: #ffb703;
+      --detail-danger: #ef4444;
+      --detail-shadow: 0 24px 70px rgba(31, 44, 71, 0.1);
     }
 
     html,
@@ -29,105 +30,207 @@
     }
 
     body {
-      background: var(--bg-page);
+      background: radial-gradient(circle at top left, rgba(255, 71, 102, 0.08), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, var(--detail-bg) 46%, #ffffff 100%);
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      color: var(--text-dark);
+      color: var(--detail-text);
       min-height: 100vh;
       padding: 0;
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 20px 16px;
+      padding: 126px 18px 48px;
     }
 
     .section {
-      background: var(--card-bg);
-      border-radius: 16px;
-      box-shadow: 0 6px 16px var(--shadow);
-      padding: 16px;
-      margin: 16px 0;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--detail-border);
+      border-radius: 26px;
+      box-shadow: var(--detail-shadow);
+      padding: 26px 28px;
+      margin: 18px 0;
+      backdrop-filter: blur(16px);
+      overflow: hidden;
     }
 
     .section h2,
     .section h3 {
-      margin: 0 0 8px 0;
-      color: var(--accent);
-      font-weight: 700;
+      margin: 0;
+      color: var(--detail-text);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .detail-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--detail-border);
+    }
+
+    .detail-title h2 {
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+    }
+
+    .order-code {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--detail-primary), var(--detail-accent));
+      color: #fff;
+      font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 18px 34px rgba(255, 71, 102, 0.18);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
     }
 
     p {
-      color: var(--muted);
+      color: var(--detail-muted);
       margin: 6px 0;
+    }
+
+    .info-item {
+      min-width: 0;
+      padding: 15px;
+      border: 1px solid var(--detail-border);
+      border-radius: 16px;
+      background: #f8fafc;
+    }
+
+    .info-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+      color: var(--detail-muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .info-value {
+      color: #273246;
+      font-weight: 800;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h3 {
+      font-size: 1.35rem;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-      background: transparent;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--detail-border);
+      background: #fff;
     }
 
     th,
     td {
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--table-border);
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--detail-border);
       text-align: left;
-      color: var(--text-dark);
+      color: var(--detail-text);
       font-size: 0.95rem;
     }
 
     thead th {
-      font-weight: 700;
-      color: var(--text-dark);
-      background: transparent;
+      font-weight: 800;
+      color: #5d6678;
+      background: #f4f7fb;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      font-size: 0.82rem;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+      background: #fbfcfe;
+      font-weight: 800;
     }
 
     .btn {
-      padding: 10px 14px;
-      border-radius: 10px;
+      min-height: 46px;
+      padding: 10px 16px;
+      border-radius: 14px;
       text-decoration: none;
-      display: inline-block;
-      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 800;
       cursor: pointer;
+      transition: transform .22s ease, box-shadow .22s ease, background .22s ease;
     }
 
     .btn-primary {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--detail-primary), var(--detail-accent));
       color: #fff;
       border: none;
+      box-shadow: 0 18px 34px rgba(255, 71, 102, 0.18);
     }
 
     .btn-primary:hover {
-      background: var(--accent-dark);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 22px 42px rgba(255, 71, 102, 0.24);
     }
 
     .btn-ghost {
       background: #fff;
-      border: 1px solid var(--ghost-border);
-      color: var(--text-dark);
+      border: 1px solid var(--detail-border);
+      color: var(--detail-text);
     }
 
     .btn-danger {
-      background: var(--danger);
+      background: var(--detail-danger);
       color: #fff;
       border: none;
     }
 
     .btn-inline {
       display: inline-flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
+      margin-top: 18px;
     }
 
     .badge {
-      display: inline-block;
-      padding: 4px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 7px 12px;
       border-radius: 999px;
       font-size: .8rem;
-      font-weight: 600;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
     .badge.pending {
@@ -136,16 +239,50 @@
     }
 
     .badge.paid {
-      background: #e8ffe8;
-      color: #1b7a2e;
+      background: #dcfce7;
+      color: #128454;
     }
 
     .badge.cancel {
-      background: #ffe5e7;
-      color: #b21d1d;
+      background: #ffe4e6;
+      color: #d12b3f;
+    }
+
+    .payment-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #fff4d4;
+      color: #a46400;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .payment-pill.paid {
+      background: #dcfce7;
+      color: #128454;
     }
 
     @media (max-width:720px) {
+      .container {
+        padding: 100px 14px 34px;
+      }
+
+      .section {
+        padding: 20px;
+        border-radius: 22px;
+      }
+
+      .detail-title,
+      .section-head {
+        display: grid;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
 
       th,
       td {
@@ -153,15 +290,51 @@
         font-size: 0.92rem
       }
 
-      .section {
-        padding: 14px
+      .btn,
+      .btn-inline,
+      .btn-inline form {
+        width: 100%;
+      }
+
+      .btn-inline {
+        display: grid;
+      }
+
+      header nav {
+        display: none;
+      }
+
+      header nav.active {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        right: 1rem;
+        left: 1rem;
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 1rem;
+        box-shadow: 0 24px 60px rgba(15, 23, 42, 0.15);
+      }
+
+      header nav.active .nav-links {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      header nav.active .nav-links a {
+        width: 100%;
+        text-align: center;
+      }
+
+      .hamburger {
+        display: inline-grid;
       }
     }
   </style>
 
 </head>
 
-<body>
+<body class="orders-page">
   <?php
   $status = $order['status'] ?? 'pending';
 
@@ -195,13 +368,60 @@
     : 'Ambil Sendiri';
   ?>
 
+  <header class="page-header">
+    <div class="header-brand">
+      <div class="brand-icon"><i class="fas fa-utensils"></i></div>
+      <div>
+        <span class="brand-title">Kantin G'penk</span>
+        <span class="brand-subtitle">Pesan makanan & minuman modern</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="header-nav">
+        <nav aria-label="Primary navigation">
+          <ul class="nav-links">
+            <li><a href="<?= site_url('/'); ?>">Home</a></li>
+            <li><a href="<?= site_url('menu'); ?>">Menu</a></li>
+            <li><a href="<?= site_url('about'); ?>">About</a></li>
+            <li><a href="<?= site_url('contact'); ?>">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <button class="hamburger icon-btn d-md-none" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
   <div class="container">
     <div class="section">
-      <h2>Detail Pesanan #<?= esc($order['code'] ?? $order['id']); ?></h2>
-      <p>Tanggal: <?= date('d M Y H:i', strtotime($order['created_at'] ?? 'now')); ?></p>
-      <p>Nama: <b><?= esc($order['customer_name'] ?? ($user['name'] ?? '-')); ?></b></p>
-      <p>Total: <b>Rp <?= number_format((int)($order['total_amount'] ?? 0), 0, ',', '.'); ?></b></p>
-      <p>Metode: <b><?= esc($deliveryText); ?></b></p>
+      <div class="detail-title">
+        <div>
+          <h2>Detail Pesanan</h2>
+          <p>Pantau ringkasan pesanan, status pembayaran, dan daftar item yang kamu pesan.</p>
+        </div>
+        <div class="order-code"><i class="fas fa-receipt"></i>#<?= esc($order['code'] ?? $order['id']); ?></div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-calendar-alt"></i>Tanggal</span>
+          <div class="info-value"><?= date('d M Y H:i', strtotime($order['created_at'] ?? 'now')); ?></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-user"></i>Nama</span>
+          <div class="info-value"><?= esc($order['customer_name'] ?? ($user['name'] ?? '-')); ?></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-wallet"></i>Total</span>
+          <div class="info-value">Rp <?= number_format((int)($order['total_amount'] ?? 0), 0, ',', '.'); ?></div>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-bag-shopping"></i>Metode</span>
+          <div class="info-value"><?= esc($deliveryText); ?></div>
+        </div>
 
       <?php if ($deliveryRaw === 'delivery'): ?>
         <?php
@@ -211,33 +431,41 @@
         );
         ?>
         <?php if ($loc !== ''): ?>
-          <p>Lokasi: <b><?= esc($loc); ?></b></p>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-location-dot"></i>Lokasi</span>
+            <div class="info-value"><?= esc($loc); ?></div>
+          </div>
         <?php endif; ?>
 
         <?php if (!empty($order['address_note'])): ?>
-          <p style="font-size: .9rem; color:#666;">
-            Catatan: <?= esc($order['address_note']); ?>
-          </p>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-note-sticky"></i>Catatan</span>
+            <div class="info-value"><?= esc($order['address_note']); ?></div>
+          </div>
         <?php endif; ?>
       <?php endif; ?>
-      <p>Status:
-        <span
-          id="orderStatusBadge"
-          class="badge <?= $statusClass; ?>"
-          data-status="<?= esc($status); ?>">
-          <?= esc($statusLabel); ?>
-        </span>
-      </p>
-      <p>
-        Status Pembayaran:
-        <b>
-          <?= $paymentStatus === 'paid' ? 'Sudah Dibayar' : 'Belum Dibayar'; ?>
-        </b>
-      </p>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-clock"></i>Status</span>
+          <span
+            id="orderStatusBadge"
+            class="badge <?= $statusClass; ?>"
+            data-status="<?= esc($status); ?>">
+            <?= esc($statusLabel); ?>
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="info-label"><i class="fas fa-credit-card"></i>Pembayaran</span>
+          <span class="payment-pill <?= $paymentStatus === 'paid' ? 'paid' : ''; ?>">
+            <?= $paymentStatus === 'paid' ? 'Sudah Dibayar' : 'Belum Dibayar'; ?>
+          </span>
+        </div>
+      </div>
     </div>
 
     <div class="section">
-      <h3>Item</h3>
+      <div class="section-head">
+        <h3>Item Pesanan</h3>
+      </div>
       <table>
         <thead>
           <tr>
@@ -292,33 +520,53 @@
         </tbody>
       </table>
 
-      <div class="btn-inline" style="margin-top:12px">
-        <a href="<?= site_url('/'); ?>" class="btn btn-ghost">Kembali</a>
+      <div class="btn-inline">
+        <a href="<?= site_url('/'); ?>" class="btn btn-ghost"><i class="fas fa-arrow-left"></i>Kembali</a>
         <?php if (in_array($status, ['pending', 'menunggu'], true)): ?>
-          <a href="<?= site_url('menu'); ?>" class="btn btn-primary">Tambah Pesanan</a>
+          <a href="<?= site_url('menu'); ?>" class="btn btn-primary"><i class="fas fa-plus"></i>Tambah Pesanan</a>
         <?php endif; ?>
 
         <?php
-        if (in_array(needle: $status, haystack: ['pending', 'menunggu'], strict: true) && $paymentStatus !== 'paid'): ?>
-          <a href="<?= site_url(relativePath: 'p/payment/' . $order['id']); ?>" class="btn btn-primary">
+        if (in_array($status, ['pending', 'menunggu'], true) && $paymentStatus !== 'paid'): ?>
+          <a href="<?= site_url('p/payment/' . $order['id']); ?>" class="btn btn-primary">
+            <i class="fas fa-credit-card"></i>
             Bayar Sekarang
           </a>
         <?php endif; ?>
 
         <?php
-        if (in_array(needle: $status, haystack: ['pending', 'menunggu'], strict: true)): ?>
-          <form action="<?= site_url(relativePath: 'p/orders/' . $order['id'] . '/delete'); ?>"
+        if (in_array($status, ['pending', 'menunggu'], true)): ?>
+          <form action="<?= site_url('p/orders/' . $order['id'] . '/delete'); ?>"
             method="post"
             onsubmit="return confirm('Yakin ingin membatalkan pesanan?');"
             style="display:inline">
             <?= csrf_field(); ?>
-            <button type="submit" class="btn btn-danger">Hapus / Batalkan</button>
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i>Hapus / Batalkan</button>
           </form>
         <?php endif; ?>
       </div>
     </div>
   </div>
   <script>
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.querySelector('header nav');
+
+    if (hamburger && nav) {
+      hamburger.addEventListener('click', () => {
+        const opened = nav.classList.toggle('active');
+        hamburger.innerHTML = opened ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+      });
+    }
+
+    document.addEventListener('click', (event) => {
+      if (!hamburger || !nav) return;
+      if (!nav.classList.contains('active')) return;
+      if (nav.contains(event.target) || hamburger.contains(event.target)) return;
+
+      nav.classList.remove('active');
+      hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+    });
+
     
     (function() {
       const badge = document.getElementById('orderStatusBadge');
@@ -327,45 +575,10 @@
       const orderId = <?= (int) $order['id']; ?>;
       const checkUrl = "<?= site_url('p/orders/' . $order['id'] . '/check'); ?>";
 
-      function pollStatus() {
-        fetch(checkUrl, {
-            headers: {
-              'Accept': 'application/json'
-            }
-          })
-          .then(res => res.ok ? res.json() : null)
-          .then(data => {
-            if (!data || !data.ok) return;
-
-            const oldStatus = badge.dataset.status || '';
-            const newStatus = data.status || '';
-
-            if (oldStatus !== newStatus) {
-              badge.dataset.status = newStatus;
-              badge.textContent = data.statusLabel || newStatus;
-
-              badge.className = 'badge ' + (data.statusClass || '');
-
-              badge.style.transition = 'transform .2s ease, box-shadow .2s ease';
-              badge.style.transform = 'scale(1.08)';
-              badge.style.boxShadow = '0 0 0 4px rgba(255, 200, 150, 0.5)';
-
-              setTimeout(() => {
-                badge.style.transform = 'scale(1)';
-                badge.style.boxShadow = 'none';
-              }, 220);
-            }
-          })
-          .catch(() => {
-          });
-      }
-
-      pollStatus();
-      setInterval(pollStatus, 30000);
+      // Realtime status polling disabled - admin control only
+      // pollStatus() dan setInterval dihapus agar hanya admin yang bisa ubah status
     })();
     
   </script>
-</body>
-</html>
 </body>
 </html>
